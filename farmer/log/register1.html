@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>微信订单管理</title>
+		<link rel="stylesheet" href="../../assets/css/amazeui.css">
+		<link rel="stylesheet" href="../../assets/css/style.css">
+	</head>
+
+	<body>
+		<header data-am-widget="header" class="am-header am-header-fixed header">
+			<div class="am-header-left am-header-nav">
+				<a href="javascript:;" class="hleft">
+					取消
+				</a>
+			</div>
+			<h1 class="am-header-title">
+		        <a href="javascript:;" class="title">
+		           注册
+		        </a>
+		    </h1>
+		</header>
+		<div class="set-container height">
+			<div class="detail-wrapper clearfix">
+				<div class="detail-main">
+					<p class="forget-title">请输入验证码和登录密码</p>
+					<ul class="set-list">
+						<li class="list-item">
+							<a href="modify-phone.html" class="item-href am-cf re-item">
+								<input type="text" placeholder="请输入验证码" class="txt" />
+								<div class="get-code">获取验证码</div>
+							</a>
+						</li>
+						<li class="list-item code-item">
+							<a href="javascript:;" class="item-href">
+								<input type="text" placeholder="请设置6-15位字母、数字组合的密码" class="txt" />
+								<!--<i class="del-num"></i>-->
+							</a>
+						</li>
+					</ul>
+					<div class="submit" data-am-modal = "{target: '#my-alert'}">注册</div>
+					<p class="send-code">验证码已发送至手机号151****1324</p>
+				</div>
+			</div>
+		</div>
+		<!--弹窗-->
+		<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+			<div class="am-modal-dialog">
+				<div class="am-modal-hd"></div>
+				<div class="am-modal-bd">
+					恭喜您注册成功
+				</div>
+				<div class="am-modal-footer">
+					<span class="am-modal-btn">确定</span>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
+	<script type="text/javascript" src="../../assets/js/common.js"></script>
+	<script type="text/javascript" src="../../assets/js/template.js"></script>
+	<script>
+		$(function() {
+			
+		});
+	</script>
+
+</html>

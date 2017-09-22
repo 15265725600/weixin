@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>微信订单管理</title>
+		<link rel="stylesheet" href="../../assets/css/amazeui.css">
+		<link rel="stylesheet" href="../../assets/css/style.css">
+	</head>
+
+	<body>
+		<header data-am-widget="header" class="am-header am-header-fixed header">
+			<div class="am-header-left am-header-nav">
+				<a href="javascript:history.back()" class="">
+					<i class="arrow-left"></i>
+				</a>
+			</div>
+			<h1 class="am-header-title">
+		        <a href="javascript:;" class="title">
+		           个人信息
+		        </a>
+		    </h1>
+		    <div class="am-header-right am-header-nav">
+				<a href="javascript:;">
+					<i class="correct">提交</i>
+				</a>
+			</div>
+		</header>
+		<div class="fpi-container">
+			<ul class="pi-list">
+				<li class="list-item">
+					<a href="javascript:;" class="item-href clearfix">
+						<span class="item-left">头像</span>
+						<div class="item-right am-fr" id="top-pdc">
+							<img src="../../assets/i/avatar.png" alt="" width="42" height="42" />
+							<input type="file" name='temp_file' value="" class="file" />
+							<i class="arrow-right"></i>
+						</div>
+					</a>
+				</li>
+				<li class="list-item">
+					<a href="javascript:;" class="item-href clearfix">
+						<span class="item-left">姓名</span>
+						<div class="item-right am-fr">
+							<input type="text" value="" id="name" placeholder="请填写"/>
+						</div>
+					</a>
+				</li>
+				<li class="list-item">
+					<a href="javascript:;" class="item-href clearfix">
+						<span class="item-left">性别</span>
+						<div class="item-right am-fr" data-am-modal="{target: '#my-actions'}">
+							<input type="text" value="" id="sex" placeholder="请选择"/>
+							<i class="arrow-right"></i>
+						</div>
+					</a>
+				</li>
+				<li class="list-item" id="choose-addr">
+					<a href="javascript:;" class="item-href clearfix" id="choose-addr">
+						<span class="item-left">所在地区</span>
+						<div class="item-right am-fr" style="font-size: 15px;color: #a9a9a9;">
+							<span id="address" style="font-size: 15px;color: #353535;"></span>请选择<i class="arrow-right"></i>
+						</div>
+					</a>
+				</li>
+				<li class="list-item">
+					<a href="javascript:;" class="item-href clearfix">
+						<span class="item-left">详细地址</span>
+						<div class="item-right am-fr">
+							<input type="text" value="" id="school" placeholder="请填写"/>
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<!--性别窗口-->
+		<div class="am-modal-actions" id="my-actions">
+			<div class="am-modal-actions-group">
+				<ul class="am-list">
+					<li class="am-modal-actions-header am-chooseBtn">男</li>
+					<li class="am-modal-actions-header am-chooseBtn">女</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
+	<script type="text/javascript" src="../../assets/js/common.js"></script>
+	<script type="text/javascript" src="../../assets/js/template.js"></script>
+	<script>
+		$(function(){
+			$('.am-chooseBtn').on('click',function(){
+				$('#my-actions').modal('close');
+				var sex = $(this).text();
+				$('#sex').val(sex);
+			});
+		});
+	</script>
+
+</html>

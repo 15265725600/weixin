@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>微信订单管理</title>
+		<link rel="stylesheet" href="../../assets/css/amazeui.css">
+		<link rel="stylesheet" href="../../assets/css/style.css">
+	</head>
+
+	<body style="background: #fff;">
+		<header data-am-widget="header" class="am-header am-header-fixed header">
+			<div class="am-header-left am-header-nav">
+				<a href="javascript:history.back()" class="">
+				</a>
+			</div>
+			<h1 class="am-header-title">
+		        <a href="javascript:;" class="title">
+		        </a>
+		    </h1>
+		     <div class="am-header-right am-header-nav">
+				<a href="javascript:;">
+					<i class="correct">注册</i>
+				</a>
+			</div>
+		</header>
+		<div class="log-container">
+			<div class="top-img"><img src="../../assets/i/avatar.png" width="70" height="70"/></div>
+			<div class="log-number">
+				<input type="text" placeholder="请填写手机号" class="txt phone"/>
+				<span class="del"></span>
+				<i class="arrow-down"></i>
+				<ul class="number-list">
+					<li class="list-item">
+						<span class="number">15265256254</span>
+						<i class="del-num">x</i>
+					</li>
+					<li class="list-item">
+						<span class="number">15265256254</span>
+						<i class="del-num">x</i>
+					</li>
+					<li class="list-item">
+						<span class="number">15265256254</span>
+						<i class="del-num">x</i>
+					</li>
+					<li class="list-item">
+						<span class="number">15265256254</span>
+						<i class="del-num">x</i>
+					</li>
+				</ul>
+			</div>
+			<div class="log-code">
+				<input type="password" placeholder="请输入6-15位密码" class="txt code"/>
+				<span class="del"></span>
+			</div>
+			<div class="login active">登录</div>
+			<div class="other am-cf">
+				<div class="left am-fl"><span class="remember"></span>记住密码</div>
+				<a href="forget-password.html" class="forget am-fr">忘记密码？</a>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
+	<script type="text/javascript" src="../../assets/js/common.js"></script>
+	<script type="text/javascript" src="../../assets/js/template.js"></script>
+	<script>
+		$(function(){
+			//点击下拉
+			$('.arrow-down').on('click',function(){
+				$(this).toggleClass('active');
+				var $this = $(this);
+				if($this.hasClass('active')){
+					$('.number-list').show();
+				}else{
+					$('.number-list').hide();
+				}
+			});
+			//焦点进入
+			$('.txt').focus(function(){
+				$(this).siblings('.del').show();
+			});
+			//点击删除
+			$('.del').on('click',function(){
+				$(this).siblings('.txt').val('');
+			});
+			//点击x号
+			$('.del-num').on('click',function(){
+				$(this).parent().remove();
+			});
+			//勾选记住密码
+			$('.remember').on('click',function(){
+				$(this).toggleClass('active');
+			});
+		});
+	</script>
+
+</html>

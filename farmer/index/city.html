@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>微信订单管理</title>
+		<link rel="stylesheet" href="../../assets/css/amazeui.css">
+		<link rel="stylesheet" href="../../assets/css/style.css">
+	</head>
+
+	<body>
+		<header data-am-widget="header" class="am-header am-header-fixed header">
+			<div class="am-header-left am-header-nav">
+				<a href="javascript:history.back()" class="">
+					<i class="arrow-left"></i>
+				</a>
+			</div>
+			<h1 class="am-header-title">
+		        <a href="javascript:;" class="title">
+		           位置信息
+		        </a>
+		    </h1>
+		</header>
+		<div class="city-container">
+			<div class="city-search">
+				<div class="search-con am-cf">
+					<input type="text" placeholder="" class="ser-txt" />
+					<span class="word">输入位置信息</span>
+					<span class="cancel am-fr">查找</span>
+				</div>
+			</div>
+			<div class="cur-position">
+				您当前的位置是：<span class="position">山东省济南市高新区</span>
+			</div>
+			<div class="city-wrapper">
+				<div class="wrapper-item">
+					<div class="initial">A</div>
+					<ul class="city-list">
+						<li class="list-item">安阳</li>
+						<li class="list-item">鞍山</li>
+					</ul>
+				</div>
+			</div>
+			<!--级联效果样式-->
+			<div class="cascade-wrapper">
+				<ul class="city-list">
+					<li class="list-item">安阳</li>
+					<li class="list-item">鞍山</li>
+				</ul>
+			</div>
+			<!-- 首字母列表 -->
+			<ul class="alpha-list">
+				<li>
+					<a data='A' href=" javascript:;">A</a>
+				</li>
+				<li>
+					<a data='B' href=" javascript:;">B</a>
+				</li>
+				<li>
+					<a data='C' href=" javascript:;">C</a>
+				</li>
+				<li>
+					<a data='D' href=" javascript:;">D</a>
+				</li>
+				<li>
+					<a data='E' href=" javascript:;">E</a>
+				</li>
+				<li>
+					<a data='F' href=" javascript:;">F</a>
+				</li>
+				<li>
+					<a data='G' href=" javascript:;">G</a>
+				</li>
+				<li>
+					<a data='H' href=" javascript:;">H</a>
+				</li>
+				<li>
+					<a data='I' href=" javascript:;I">I</a>
+				</li>
+				<li>
+					<a data='J' href=" javascript:;">J</a>
+				</li>
+				<li>
+					<a data='K' href=" javascript:;">K</a>
+				</li>
+				<li>
+					<a data='L' href=" javascript:;">L</a>
+				</li>
+				<li>
+					<a data='M' href=" javascript:;">M</a>
+				</li>
+				<li>
+					<a data='N' href=" javascript:;">N</a>
+				</li>
+				<li>
+					<a data='O' href=" javascript:;">O</a>
+				</li>
+				<li>
+					<a data='P' href=" javascript:;">P</a>
+				</li>
+				<li>
+					<a data='Q' href=" javascript:;">Q</a>
+				</li>
+				<li>
+					<a data='R' href=" javascript:;">R</a>
+				</li>
+				<li>
+					<a data='S' href=" javascript:;">S</a>
+				</li>
+				<li>
+					<a data='T' href=" javascript:;">T</a>
+				</li>
+				<li>
+					<a data='U' href=" javascript:;">U</a>
+				</li>
+				<li>
+					<a data='V' href=" javascript:;">V</a>
+				</li>
+				<li>
+					<a data='W' href=" javascript:;">W</a>
+				</li>
+				<li>
+					<a data='X' href=" javascript:;">X</a>
+				</li>
+				<li>
+					<a data='Y' href=" javascript:;">Y</a>
+				</li>
+				<li>
+					<a data='Z' href=" javascript:;">Z</a>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
+	<script type="text/javascript" src="../../assets/js/common.js"></script>
+	<script type="text/javascript" src="../../assets/js/template.js"></script>
+	<script>
+		$(function() {
+			$('.ser-txt').focus(function() {
+				$('.word').hide();
+			})
+		})
+	</script>
+
+</html>

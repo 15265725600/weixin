@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>微信订单管理</title>
+		<link rel="stylesheet" href="../../assets/css/amazeui.css">
+		<link rel="stylesheet" href="../../assets/css/style.css">
+	</head>
+
+	<body>
+		<header data-am-widget="header" class="am-header am-header-fixed header">
+			<div class="am-header-left am-header-nav">
+				<a href="javascript:history.back()" class="">
+					<i class="arrow-left"></i>
+				</a>
+			</div>
+			<h1 class="am-header-title">
+		        <a href="javascript:;" class="title">
+		          预约详情
+		        </a>
+		    </h1>
+		</header>
+		<div class="fad-container">
+			<div class="time">2017/07/31 15:30:05</div>
+			<div class="fad-top">
+				<div class="item-top am-cf">
+					<span class="ordernum am-fl">订单号：201020202</span>
+					<span class="status am-fr">待确认</span>
+				</div>
+				<div class="item-task">
+					<div class="title">作业描述</div>
+					<div class="desc">请帮我把地翻一下, 帮我播种哦，辛苦了。活要干仔细 点哦，拜托了。</div>
+				</div>
+			</div>
+			<div class="fad-center">
+				<div class="task-time">作业时间：2014/01/12</div>
+				<div class="task-state">作业类别：播种</div>
+				<div class="task-addr">地区：济南市历下区</div>
+			</div>
+			<div class="line"></div>
+			<div class="fad-bottom">
+				<div>预约人：牛嬷嬷</div>
+				<div>联系电话：1523562525</div>
+				<div>地址：济南市历次传</div>
+			</div>
+			<!--除待确认状态以外其余状态全部有这条信息-->
+			<div class="fad-infor">
+				<div class="wf-title">
+					<span class="workInfor">机手信息</span>
+				</div>
+				<div class="infor-content">
+					<div class="infor-img"><img src="../../assets/i/person-img.png" width="69" height="69" /></div>
+					<div class="infor-right">
+						<div class="name">机手姓名：<span>来看看</span></div>
+						<div class="phone">联系电话：
+							<a href="javascript:;" data-am-modal="{target: '#my-alert'}">12536525652</a>
+						</div>
+						<div class="carinfor">车辆信息：<span>神农一号·鲁A12345神农一号·鲁A12345</span></div>
+					</div>
+				</div>
+			</div>
+			<!--待完成-->
+			<div class="fad-footer am-cf">
+				<a href="javascript:;" class="state am-fr">完成</a>
+			</div>
+			<!--待评价-->
+			<div class="fad-footer am-cf">
+				<a href="evaluate.html" class="state am-fr">去评价</a>
+			</div>
+			<!--已完成-->
+			<!--<div class="fad-footer am-cf">
+				<a href="javascript:;" class="state am-fr">查看评价</a>
+				<span href="javascript:;" class="del am-fr">删除订单</span>
+			</div>-->
+			<!--待确认-->
+			<!--<div class="fad-footer am-cf">
+				<a href="javascript:;" class="state am-fr">确认</a>
+				<span href="javascript:;" class="del am-fr">取消预约</span>
+			</div>-->
+		</div>
+		<!--拨打电话-->
+		<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+			<div class="am-modal-dialog customer-service">
+				<div class="am-modal-hd title">确定要拨打机手电话</div>
+				<div class="am-modal-bd name">
+					400-9999876
+				</div>
+				<div class="am-modal-footer">
+					<span class="am-modal-btn del">取消</span>
+					<a href="tel://400-9999876" class="dial">拨打</a>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
+	<script type="text/javascript" src="../../assets/js/common.js"></script>
+	<script type="text/javascript" src="../../assets/js/template.js"></script>
+	<script>
+		$('body').height($(window).height());
+	</script>
+
+</html>
