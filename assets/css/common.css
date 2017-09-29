@@ -141,6 +141,10 @@ input.rt[type=checkbox]:checked:after {
 input.rt[type=checkbox] {
   background: #fff;
 }
+a:hover,
+a:focus {
+  color: #000;
+}
 .clearfix:after {
   content: "";
   height: 0;

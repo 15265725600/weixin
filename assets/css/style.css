@@ -142,6 +142,10 @@ input.rt[type=checkbox]:checked:after {
 input.rt[type=checkbox] {
   background: #fff;
 }
+a:hover,
+a:focus {
+  color: #000;
+}
 .clearfix:after {
   content: "";
   height: 0;
@@ -1172,7 +1176,6 @@ input.rt[type=checkbox] {
 .fpi-container {
   margin-top: 6px;
   padding-bottom: 20px;
-  overflow-x: hidden;
   background: #fff;
 }
 .fpi-container .pi-list {
@@ -1331,6 +1334,7 @@ input.rt[type=checkbox] {
   background-repeat: no-repeat;
   background-size: 16px 16px;
   background-image: url("../i/del.png");
+  display: none;
 }
 .set-container .submit {
   width: 90%;
@@ -1349,6 +1353,9 @@ input.rt[type=checkbox] {
   font-size: 15px;
   margin-top: 20px;
   text-align: center;
+}
+.my-container {
+  padding-bottom: 40px;
 }
 .my-container .top img {
   width: 100%;
@@ -1688,6 +1695,44 @@ input.rt[type=checkbox] {
   font-size: 15px;
   margin-top: 10px;
   text-align: center;
+  display: none;
+}
+/*国别码侧边栏*/
+.side-bar {
+  background: #fff;
+  position: absolute;
+  top: 0;
+  right: -100%;
+  width: 100%;
+  z-index: 1100;
+  height: 100%;
+  display: none;
+}
+.side-bar.active {
+  right: 0;
+  display: block;
+}
+.side-bar #scroll-wrapper {
+  height: 100%;
+  overflow: hidden;
+}
+.side-bar #scroll-wrapper .codenum {
+  padding: 50px 0px;
+}
+.side-bar #scroll-wrapper .codenum li {
+  padding: 10px 20px;
+  color: #070707;
+  font-size: 14px;
+  position: relative;
+}
+.side-bar #scroll-wrapper .codenum li:after {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-top: 1px solid #f1f1f1;
+  content: ' ';
+  width: 100%;
 }
 .repro {
   width: 100%;

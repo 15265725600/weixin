@@ -1,11 +1,18 @@
-
-var para = window.location.search;
-
 //页面地址前缀
 function preUrl(path) {
 	var fUrl = 'http://127.0.0.1:8020/hm_wxdd/';
 	return fUrl + path;
 }
+
+//重新登录后点击返回键
+function backUrl(path) {
+	var prevUrl = document.referrer.split('?')[0];
+	var Url = "http://127.0.0.1:8020/hm_wxdd/"+path+"/log/login.html";
+	if(prevUrl == Url) {
+		$('.backUrl').attr('href', 'javascript:history.go(-2);');
+	}
+}
+
 
 /*
  *  获取地址栏中的参数
@@ -21,13 +28,11 @@ function GetQueryString(name) {
 
 //ajax 传参url
 function reqUrl(path) {
-	var frontUrl = 'http://192.168.2.146:8008/group19/hm_shenlun/index.php/Webservice/V100/';
+	var frontUrl = 'http://192.168.2.46/group1/hm_weixin/index.php/Webservice/V100/';
 	return frontUrl + path;
 }
 
-//function netUrl(path) {
-//	var frontUrl = 'http://124.128.23.74:8010/hmapi_jintai/plugins/';
-//}
+
 var token;
 
 //设置cookie
@@ -36,13 +41,11 @@ function setCookie(cname, cvalue, exdays) {
 	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
 	var expires = "expires=" + d.toGMTString();
 	document.cookie = cname + "=" + encodeURIComponent(cvalue) + "; " + expires + ";path=/";
-	console.log(document.cookie);
 }
 
 //获取cookie
 function getCookie(cname) {
 	var name = cname + "=";
-	//  console.log(document.cookie);
 	var ca = document.cookie.split(';');
 	for(var i = 0; i < ca.length; i++) {
 		var c = ca[i].trim();

@@ -786,7 +786,7 @@
 .fpi-container {
     margin-top: 6px;
     padding-bottom: 20px;
-    overflow-x: hidden;
+//  overflow-x: hidden;
     background: #fff;
     .pi-list {
         padding-left: 15px;
@@ -926,6 +926,7 @@
                     .bg-img('del',
                     16px,
                     16px);
+                    display: none;
                 }
             }
         }
@@ -943,6 +944,7 @@
 }
 
 .my-container {
+    padding-bottom: 40px;
     .top {
         img {
             width: 100%;
@@ -1208,9 +1210,37 @@
         .font-color(@cyan,15px);
         margin-top: 10px;
         text-align: center;
+        display: none;
     }
 }
-
+/*国别码侧边栏*/
+.side-bar{
+    background:#fff;
+    position: absolute;
+    top:0;
+    right:-100%;
+    width:100%;
+    z-index: 1100;
+    height:100%;
+    display: none;
+    &.active{
+        right: 0;
+        display: block;
+    }
+    #scroll-wrapper{
+        height: 100%;
+        overflow: hidden;
+        .codenum{
+            padding: 50px 0px;
+            li{
+                padding: 10px 20px;
+                .font-color(@black,14px);
+                .border-1px(@line);
+            }
+        }
+    }
+    
+}
 .repro {
     width: 100%;
     position: relative;

@@ -15,7 +15,7 @@
 	<body class="height">
 		<header data-am-widget="header" class="am-header am-header-fixed header">
 			<div class="am-header-left am-header-nav">
-				<a href="javascript:;" class="hleft">
+				<a href="login.html" class="hleft">
 					取消
 				</a>
 			</div>
@@ -29,15 +29,15 @@
 			<div class="detail-wrapper clearfix">
 				<div class="detail-main">
 					<ul class="set-list">
-						<li class="list-item">
-							<a href="modify-phone.html" class="item-href am-cf re-item">
+						<li class="list-item poll-code">
+							<a href="javascript:;" class="item-href am-cf re-item">
 								<span class="am-fl">国家地区</span>
-								<span class="am-fr">中国大陆+86</span>
+								<span class="am-fr country-code"><i class="country">中国大陆</i><i class="code">+86</i></span>
 							</a>
 						</li>
 						<li class="list-item code-item">
 							<a href="javascript:;" class="item-href">
-								<input type="text" placeholder="请输入手机号" class="txt" />
+								<input type="text" placeholder="请输入手机号" class="txt" onkeyup="value=value.replace(/[^\d]/g,'') "/>
 								<i class="del-num"></i>
 							</a>
 						</li>
@@ -51,14 +51,100 @@
 				<p class="blue">《注册协议》</p>
 			</div>
 		</div>
+		<!-- 侧边栏内容 -->
+		<div class="side-bar">
+			<header data-am-widget="header" class="am-header am-header-fixed header">
+				<div class="am-header-left am-header-nav">
+					<a href="javascript:;" class="hleft">
+						<i class="arrow-left codeback"></i>
+					</a>
+				</div>
+				<h1 class="am-header-title">
+		        <a href="javascript:;" class="title">
+		           国家或地区
+		        </a>
+		    </h1>
+			</header>
+			<div class="code-wrapper" id="scroll-wrapper">
+				<div id="scroller">
+					<ul class="codenum">
+						<script type="text/html" id="template">
+							{{each infor as item index}}
+							<li><span class="Country">{{item.country}}</span><span class="Code">+{{item.mobile_prefix}}</span></li>
+							{{/each}}
+						</script>
+					</ul>
+				</div>
+			</div>
+		</div>
 	</body>
 	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
 	<script type="text/javascript" src="../../assets/js/common.js"></script>
 	<script type="text/javascript" src="../../assets/js/template.js"></script>
+	<script type="text/javascript" src="../../assets/js/iscroll.js"></script>
 	<script>
 		$(function() {
+			var myScroll = new IScroll('#scroll-wrapper', {
+				click: true
+			});
 
+			//打开侧边栏
+			$('.country-code').on('click', function() {
+				$('.side-bar').show().animate({
+					'right': 0
+				}, 400);
+				myScroll.refresh();
+			});
+			//关闭侧边栏
+			$('.codeback').on('click',function(){
+				hide();
+			});
+			function hide(){
+				$('.side-bar').animate({
+					'right': '-100%'
+				}, 300).hide(300);
+				myScroll.refresh();
+			}
+			
+			//获取用户注册国别码
+			$.ajax({
+				url: reqUrl('client_mobile_country_prefix'),
+				type: 'post',
+				dataType: 'json',
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function(data) {
+					var codelist = template('template', data);
+					$('.codenum').html(codelist);
+					//选取国家或地区
+					$('.codenum li').on('click',function(){
+						var countey = $(this).children('.Country').text();
+						var code = $(this).children('.Code').text();
+						hide();
+						$('.country').html(countey);
+						$('.code').html(code);
+					});
+				}
+			});
+			//点击删除手机号
+			$('.txt').focus(function(){
+				var tel = $('.txt').val();
+				$('.del-num').show();
+			});
+			$('.del-num').on('click',function(){
+				$('.txt').val("");
+			});
+			$('.submit').on('click',function(){
+				var code = $('.code').html();
+				var tel = $('.txt').val();
+				if(tel == ""){
+					mask('请输入手机号');
+					return false;
+				}
+				window.location.href = preUrl('farmer/log/register1.html?tel='+tel+'&codenum='+code+'');
+			});
 		});
 	</script>
 
