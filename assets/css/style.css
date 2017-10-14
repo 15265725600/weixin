@@ -668,6 +668,84 @@ a:focus {
   content: ' ';
   width: 100%;
 }
+.base-wrap {
+  position: relative;
+}
+.base-wrap:after {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-top: 1px solid #f1f1f1;
+  content: ' ';
+  width: 100%;
+}
+.base-wrap .base-item {
+  position: relative;
+  padding: 14px 20px 20px 0px;
+}
+.base-wrap .base-item:after {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-top: 1px solid #f1f1f1;
+  content: ' ';
+  width: 100%;
+}
+.base-wrap .base-item:last-child:after {
+  display: none;
+}
+.base-wrap .base-item .time {
+  color: #858585;
+  font-size: 13px;
+}
+.base-wrap .base-item .item-bottom {
+  margin-top: 4px;
+}
+.base-wrap .base-item .item-bottom .infor {
+  position: relative;
+}
+.base-wrap .base-item .item-bottom .infor .dot {
+  position: absolute;
+  top: 4px;
+  left: 16px;
+  background: #f16046;
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+.base-wrap .base-item .item-bottom .icon-infor {
+  display: inline-block;
+  width: 16px;
+  height: 22px;
+  vertical-align: baseline;
+  position: relative;
+  top: 2px;
+  background-repeat: no-repeat;
+  background-size: 16px 22px;
+  background-image: url("../i/bell@2x.png");
+}
+@media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
+  .base-wrap .base-item .item-bottom .icon-infor {
+    background-image: url("../i/bell@3x.png");
+  }
+}
+.base-wrap .base-item .item-bottom .name {
+  color: #858585;
+  font-size: 13px;
+}
+.base-wrap .base-item .item-bottom .desc {
+  color: #070707;
+  font-size: 15px;
+}
+.base-wrap .btn {
+  background: #f16046;
+  text-align: center;
+  color: #ffffff;
+  font-size: 13px;
+}
 /*我的预约*/
 .wfa-wrapper {
   padding-bottom: 49px;
@@ -1092,6 +1170,7 @@ a:focus {
   padding: 10px;
   color: #070707;
   font-size: 14px;
+  resize: none;
 }
 .wfe-container .wfe-submit {
   width: 90%;
@@ -1349,6 +1428,7 @@ a:focus {
   margin-top: 40px;
 }
 .set-container .codetxt {
+  display: none;
   color: #475e8b;
   font-size: 15px;
   margin-top: 20px;
@@ -1440,6 +1520,7 @@ a:focus {
   background: #ffffff;
   outline: 0;
   font-size: 14px;
+  resize: none;
 }
 /*我要预约*/
 .ma-container {
@@ -1477,6 +1558,9 @@ a:focus {
 .ma-container .choose-item .right {
   color: #858585;
   font-size: 15px;
+  border: none;
+  outline: none;
+  text-align: right;
 }
 .ma-container .choose-item .addr-txt {
   border: none;
@@ -1798,7 +1882,7 @@ a:focus {
 }
 .city-container .city-wrapper .initial,
 .city-container .cascade-wrapper .initial {
-  padding: 4px 20px ;
+  padding: 4px 20px;
   color: #070707;
   font-size: 14px;
 }
@@ -1827,12 +1911,16 @@ a:focus {
 .city-container .cascade-wrapper .city-list .list-item:last-child:after {
   display: none;
 }
+.city-container .city-wrapper .wrapper-item:not(:first-child),
+.city-container .cascade-wrapper .wrapper-item:not(:first-child) {
+  display: none;
+}
 .city-container .cascade-wrapper {
   display: none;
 }
 .city-container .alpha-list {
   position: absolute;
-  top: 20%;
+  top: 50px;
   right: 10px;
   color: #070707;
   font-size: 12px;
@@ -1849,4 +1937,40 @@ a:focus {
   color: #ffffff;
   text-align: center;
   line-height: 14px;
+}
+/*选择车辆*/
+.dropDown {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+}
+.dropDown #drop-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 240px;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+.dropDown #drop-wrapper .d-nav {
+  display: none;
+}
+.dropDown #drop-wrapper li {
+  padding: 10px 0;
+  position: relative;
+  text-align: center;
+}
+.dropDown #drop-wrapper li:after {
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-top: 1px solid #f1f1f1;
+  content: ' ';
+  width: 100%;
 }

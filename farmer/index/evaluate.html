@@ -27,32 +27,36 @@
 		</header>
 		<div class="wfe-container">
 			<div class="line"></div>
-			<ul class="wrapper-list">
-				<li class="list-item">
-					<a href="appointment-details.html" class="item-href">
-						<div class="item-top am-cf">
-							<span class="time am-fl">2017/3/11</span>
+			<div class="eva-container">
+				<script type="text/html" id="template">
+					<ul class="wrapper-list">
+						<li class="list-item">
+							<a href="javascript:;" class="item-href">
+								<div class="item-top am-cf">
+									<span class="time am-fl">{{infor.ordertime}}</span>
+								</div>
+								<div class="item-task">
+									<div class="title">作业描述</div>
+									<div class="desc">{{infor.demo}}</div>
+								</div>
+								<div class="bottom">
+									<span class="keyWord">{{infor.type_text}}</span>
+									<span class="address">{{infor.province}}{{infor.city}}{{infor.area}}</span>
+								</div>
+							</a>
+						</li>
+					</ul>
+					<div class="infor-content">
+						<div class="infor-img"><img src="../../assets/i/person-img.png" width="69" height="69" /></div>
+						<div class="infor-right">
+							<div class="name">机手姓名：<span>{{infor.mname}}</span></div>
+							<div class="phone">联系电话：
+								<a href="javascript:;" data-am-modal="{target:'#my-alert'}">{{infor.mphone}}</a>
+							</div>
+							<div class="carinfor"><i>车辆信息：</i><span>{{infor.cartname}}·{{infor.cartnum}}·{{infor.model}}·{{infor.carttype}}</span></div>
 						</div>
-						<div class="item-task">
-							<div class="title">作业描述</div>
-							<div class="desc">请帮我把地翻一下, 帮我播种哦，辛苦了。活要干仔细 点哦，拜托了。</div>
-						</div>
-						<div class="bottom">
-							<span class="keyWord">播种</span>
-							<span class="address">济南市高新区</span>
-						</div>
-					</a>
-				</li>
-			</ul>
-			<div class="infor-content">
-				<div class="infor-img"><img src="../../assets/i/person-img.png" width="69" height="69" /></div>
-				<div class="infor-right">
-					<div class="name">机手姓名：<span>来看看</span></div>
-					<div class="phone">联系电话：
-						<a href="javascript:;">12536525652</a>
 					</div>
-					<div class="carinfor">机械型号：<span>神农一号</span></div>
-				</div>
+				</script>
 			</div>
 			<div class="wfe-evaluate">
 				<div class="top">
@@ -66,7 +70,7 @@
 					</div>
 				</div>
 				<div class="message">
-					<textarea name="" rows="5" cols="" class="word" placeholder="谈谈您对机手作业服务的感受(限制200字)"></textarea>
+					<textarea name="" rows="5" cols="" class="word" placeholder="谈谈您对机手作业服务的感受(限制200字)" onkeyup="checkLength(this)"></textarea>
 				</div>
 				<div class="upload-wrap">
 					<div>添加图片（限4张）</div>
@@ -86,10 +90,12 @@
 	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
 	<script type="text/javascript" src="../../assets/js/common.js"></script>
+	<script type="text/javascript" src="../../assets/js/exif.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/template.js"></script>
 	<script>
 		$('body').height($(window).height());
-		var num = finalnum = tempnum = 0;
+		var num = tempnum = 0;
+		var finalnum = 5;
 		var lis = $(".star-box span");
 		//num:传入点亮星星的个数
 		//finalnum:最终点亮星星的个数
@@ -111,7 +117,167 @@
 			lis[i - 1].onclick = function() { //鼠标点击,同时会调用onmouseout,改变tempnum值点亮星星
 				tempnum = this.index;
 			}
-		}
+		};
+		//获取订单详情
+		var id = GetQueryString('id');
+		var token = getCookie('token');
+		var para = window.location.search;
+		$.ajax({
+			type: 'POST',
+			url: reqUrl("order_get"),
+			data: {
+				token: token,
+				id: id
+			},
+			dataType: 'JSON',
+			async: false,
+			xhrFields: {
+				withCredentials: true
+			},
+			success: function(data) {
+				if(data.error_code == 200) {
+					window.location.href = preUrl('farmer/log/login.html' + para + '&path=farmer/index/evaluate.html');
+				} else if(data.success) {
+					var content = template('template', data);
+					$('.eva-container').html(content);
+
+				} else {
+					mask(data.msg);
+				}
+			},
+			error: function(e, request, settings) {
+				alert(settings);
+			}
+		});
+		//上传图片
+		var count = 0;
+		var imgArr = [];
+		uploadImg();
+
+		function uploadImg() {
+			$('.j-file-cert').on('change', function(e) {
+				count++;
+				if(count < 5) {
+					var that = $(this);
+					if(!window.FileReader) return;
+
+					e.stopPropagation();
+					e.preventDefault();
+
+					var file = e.target.files[0];
+					var content = '';
+
+					if(!file.type.match('image.*')) {
+						alert('文件' + f.name + '不是图片')
+						return;
+					}
+
+					var orientation;
+					//EXIF js 可以读取图片的元信息 https://github.com/exif-js/exif-js
+					EXIF.getData(file, function() {
+						orientation = EXIF.getTag(this, 'Orientation');
+					});
+
+					var reader = new FileReader();
+
+					reader.onload = function(e) {
+						getImgData(this.result, orientation, function(data) {
+							$.ajax({
+								type: 'POST',
+								url: reqUrl("file_upload"),
+								data: {
+									token: token,
+									keytype: 3,
+									orderid: id,
+									temp_file: data
+								},
+								dataType: 'JSON',
+								xhrFields: {
+									withCredentials: true
+								},
+								async: false,
+								success: function(data) {
+									imgArr.push(data.infor.imgurl);
+									content = '<li>' +
+										'<img class="j-image" src="' + data.infor.imgurl + '">' +
+										'<i class="icon-close"></i>' +
+										'</li>'
+
+									that.parent().before(content);
+									//	删除上传图片
+									$('.upload').on('click', '.icon-close', function() {
+										$(this).parent().remove();
+										var tue = $(this).siblings().attr('src');
+										imgArr.removeByValue(tue);
+										if(count > 0) {
+											count--;
+										}
+									});
+								}
+							});
+						});
+
+					}
+					reader.readAsDataURL(file);
+				} else {
+					mask('最多传4张图片');
+					count = 4;
+					return false;
+				}
+				e.target.value = '';
+
+			});
+		};
+
+		//限制字数
+		function checkLength(which) {
+			var maxChars = 200;
+			if(which.value.length > maxChars)
+				which.value = which.value.substring(0, maxChars);
+		};
+
+		//提交评价
+		$('.wfe-submit').on('click', function() {
+			var reply = $('.word').val();
+			console.log(finalnum);
+			
+			$.ajax({
+				type: 'POST',
+				url: reqUrl("order_reply"),
+				data: {
+					token: token,
+					replystar: finalnum,
+					orderid:id,
+					reply:reply
+				},
+				dataType: 'JSON',
+				async: false,
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function(data) {
+					if(data.error_code == 200) {
+						window.location.href = preUrl('farmer/log/login.html'+para+'&path=farmer/index/evaluate.html');
+					} else if(data.success) {
+						window.location.href = document.referrer;
+					} else {
+						mask(data.msg);
+					}
+				},
+				error: function(e, request, settings) {
+					alert(settings);
+				}
+			});
+		});
+		//删除数组中指定的一项
+		Array.prototype.removeByValue = function(val) {
+			for(var i = 0; i < this.length; i++) {
+				if(this[i] == val) {
+					this.splice(i, 1);
+					break;
+				}
+			}
+		};
 	</script>
 
 </html>

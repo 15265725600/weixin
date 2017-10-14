@@ -24,52 +24,61 @@
 		           个人信息
 		        </a>
 		    </h1>
+			<div class="am-header-right am-header-nav">
+				<a href="javascript:;">
+					<i class="correct">保存</i>
+				</a>
+			</div>
 		</header>
 		<div class="fpi-container">
 			<ul class="pi-list">
-				<li class="list-item">
-					<a href="javascript:;" class="item-href clearfix">
-						<span class="item-left">头像</span>
-						<div class="item-right am-fr" id="top-pdc">
-							<img src="../../assets/i/avatar.png" alt="" width="42" height="42" />
-							<input type="file" name='temp_file' value="" class="file" />
-							<i class="arrow-right"></i>
-						</div>
-					</a>
-				</li>
-				<li class="list-item">
-					<a href="javascript:;" class="item-href clearfix">
-						<span class="item-left">姓名</span>
-						<div class="item-right am-fr">
-							<input type="text" value="杨柳柳" id="name" />
-						</div>
-					</a>
-				</li>
-				<li class="list-item">
-					<a href="javascript:;" class="item-href clearfix">
-						<span class="item-left">性别</span>
-						<div class="item-right am-fr" data-am-modal="{target: '#my-actions'}">
-							<input type="text" value="女" id="sex" />
-							<i class="arrow-right"></i>
-						</div>
-					</a>
-				</li>
-				<li class="list-item" id="choose-addr">
-					<a href="javascript:;" class="item-href clearfix" id="choose-addr">
-						<span class="item-left">所在地区</span>
-						<div class="item-right am-fr">
-							<span id="address" style="font-size: 15px;color: #353535;"></span><i class="arrow-right"></i>
-						</div>
-					</a>
-				</li>
-				<li class="list-item">
-					<a href="javascript:;" class="item-href clearfix">
-						<span class="item-left">详细地址</span>
-						<div class="item-right am-fr">
-							<input type="text" value="山东省济南市高新区" id="school" />
-						</div>
-					</a>
-				</li>
+				<script type="text/html" id="content">
+					<li class="list-item">
+						<a href="javascript:;" class="item-href clearfix">
+							<span class="item-left">头像</span>
+							<div class="item-right am-fr" id="top-pdc">
+								{{if infor.avatar == ""}}
+								<img src="../../assets/i/avatar.png" alt="" width="42" height="42" /> {{else}}
+								<img src="{{infor[0].avatar}}" alt="" width="42" height="42" /> {{/if}}
+								<input type="file" name='temp_file' value="" class="file" />
+								<i class="arrow-right"></i>
+							</div>
+						</a>
+					</li>
+					<li class="list-item">
+						<a href="javascript:;" class="item-href clearfix">
+							<span class="item-left">姓名</span>
+							<div class="item-right am-fr">
+								<input type="text" value="{{infor[0].name}}" id="name" />
+							</div>
+						</a>
+					</li>
+					<li class="list-item">
+						<a href="javascript:;" class="item-href clearfix">
+							<span class="item-left">性别</span>
+							<div class="item-right am-fr" data-am-modal="{target: '#my-actions'}">
+								<input type="text" value="{{infor[0].sex}}" id="sex" placeholder="请选择" readonly="readonly" />
+								<i class="arrow-right"></i>
+							</div>
+						</a>
+					</li>
+					<li class="list-item" id="choose-addr">
+						<a href="javascript:;" class="item-href clearfix" id="choose-addr">
+							<span class="item-left">所在地区</span>
+							<div class="item-right am-fr" style="font-size: 15px;color: #a9a9a9;">
+								<input type="text" value="{{infor[0].province}}{{infor[0].city}}{{infor[0].area}}" id="address" placeholder="请选择" /><i class="arrow-right"></i>
+							</div>
+						</a>
+					</li>
+					<li class="list-item">
+						<a href="javascript:;" class="item-href clearfix">
+							<span class="item-left">详细地址</span>
+							<div class="item-right am-fr">
+								<input type="text" value="{{infor[0].address}}" id="details-addr" />
+							</div>
+						</a>
+					</li>
+				</script>
 			</ul>
 		</div>
 		<!--性别窗口-->
@@ -84,14 +93,292 @@
 	</body>
 	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
+	<script type="text/javascript" src="../../assets/js/picker.min.js"></script>
+	<script type="text/javascript" src="../../assets/js/exif.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/common.js"></script>
 	<script type="text/javascript" src="../../assets/js/template.js"></script>
 	<script>
-		$(function(){
-			$('.am-chooseBtn').on('click',function(){
-				$('#my-actions').modal('close');
-				var sex = $(this).text();
-				$('#sex').val(sex);
+		$(function() {
+			var token = getCookie('token');
+			var imgArr = "";
+			//获取用户信息
+			$.ajax({
+				url: reqUrl('client_get'),
+				type: 'post',
+				dataType: 'json',
+				data: {
+					token: token,
+					utype: 'client'
+				},
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function(data) {
+					if(data.error_code == 200) {
+						window.location.href = preUrl('farmer/log/login.html?path=farmer/my/personal-information.html');
+					} else if(data.success) {
+						var content = template('content', data);
+						$('.pi-list').html(content);
+						$('.am-chooseBtn').on('click', function() {
+							$('#my-actions').modal('close');
+							var sex = $(this).text();
+							$('#sex').val(sex);
+						});
+						//上传头像
+						$('.file').on('change', function(e) {
+							if(!window.FileReader) return;
+
+							e.stopPropagation();
+							e.preventDefault();
+
+							var file = e.target.files[0];
+							var content = '';
+							if(!file.type.match('image.*')) {
+								alert('文件' + f.name + '不是图片')
+								return;
+							}
+
+							var orientation;
+							//EXIF js 可以读取图片的元信息 https://github.com/exif-js/exif-js
+							EXIF.getData(file, function() {
+								orientation = EXIF.getTag(this, 'Orientation');
+							});
+
+							var reader = new FileReader();
+
+							reader.onload = function(e) {
+								getImgData(this.result, orientation, function(data) {
+									$.ajax({
+										type: 'POST',
+										url: reqUrl("file_upload"),
+										data: {
+											token: token,
+											keytype: 1,
+											temp_file: data
+										},
+										dataType: 'JSON',
+										xhrFields: {
+											withCredentials: true
+										},
+										async: false,
+										success: function(data) {
+											content = ' <img class="avatar" width="42" height="42" src="' + data.infor.avatar + '">';
+											$('#top-pdc').find('img').replaceWith(content);
+										}
+									});
+								});
+
+							}
+							reader.readAsDataURL(file);
+
+						});
+
+						//获取城市列表
+						var city = [];
+						$.ajax({
+							type: 'POST',
+							url: reqUrl("position_all"),
+							dataType: 'JSON',
+							async: false,
+							xhrFields: {
+								withCredentials: true
+							},
+							success: function(data) {
+								city = data.infor.listItems;
+							},
+							error: function(e, request, settings) {
+								alert(settings);
+							}
+						});
+						console.log(city);
+						//获取地址
+						var cityId = [];
+						var nameEl = document.getElementById('choose-addr');
+						var addr = document.getElementById('address');
+						var address = "";
+						var first = []; /* 省，直辖市 */
+						var second = []; /* 市 */
+						var third = []; /* 镇 */
+
+						var checked = [0, 0, 0]; /* 已选选项 */
+
+						function creatList(obj, list) {
+							obj.forEach(function(item, index, arr) {
+								var temp = new Object();
+								temp.text = item.name;
+								temp.value = item.id;
+								list.push(temp);
+							})
+						};
+						creatList(city, first); // 省
+
+						if(city[0].hasOwnProperty('children')) {
+							creatList(city[0].children, second); //市
+						} else {
+							second = [{
+								text: '',
+								value: 0
+							}];
+						}
+
+						if(city[0].children[0].hasOwnProperty('children')) {
+							creatList(city[0].children[0].children, third); //区
+						} else {
+							third = [{
+								text: '',
+								value: 0
+							}];
+						}
+
+						var picker = new Picker({
+							data: [first, second, third],
+							selectedIndex: [0, 0, 0],
+							title: ''
+						});
+
+						picker.on('picker.select', function(selectedVal, selectedIndex) {
+							var text1 = first[selectedIndex[0]].text;
+							var text2 = second[selectedIndex[1]].text;
+							var text3 = third[selectedIndex[2]] ? third[selectedIndex[2]].text : '';
+							addr.value = text1 + ',' + text2 + ',' + text3;
+						});
+
+						picker.on('picker.change', function(index, selectedIndex) {
+							if(index === 0) {
+								firstChange();
+							} else if(index === 1) {
+								secondChange();
+							}
+
+							function firstChange() {
+								second = [];
+								third = [];
+								checked[0] = selectedIndex;
+								var firstCity = city[selectedIndex];
+								if(firstCity.hasOwnProperty('children')) {
+									creatList(firstCity.children, second);
+
+									var secondCity = city[selectedIndex].children[0]
+									if(secondCity.hasOwnProperty('children')) {
+										creatList(secondCity.children, third);
+									} else {
+										third = [{
+											text: '',
+											value: 0
+										}];
+										checked[2] = 0;
+									}
+								} else {
+									second = [{
+										text: '',
+										value: 0
+									}];
+									third = [{
+										text: '',
+										value: 0
+									}];
+									checked[1] = 0;
+									checked[2] = 0;
+								}
+
+								picker.refillColumn(1, second);
+								picker.refillColumn(2, third);
+								picker.scrollColumn(1, 0)
+								picker.scrollColumn(2, 0)
+							}
+
+							function secondChange() {
+								third = [];
+								checked[1] = selectedIndex;
+								var first_index = checked[0];
+								if(city[first_index].children.children[selectedIndex].hasOwnProperty('children')) {
+									var secondCity = city[first_index].children[selectedIndex];
+									creatList(secondCity.children, third);
+									picker.refillColumn(2, third);
+									picker.scrollColumn(2, 0)
+								} else {
+									third = [{
+										text: '',
+										value: 0
+									}];
+									checked[2] = 0;
+									picker.refillColumn(2, third);
+									picker.scrollColumn(2, 0)
+								}
+							}
+
+						});
+
+						picker.on('picker.valuechange', function(selectedVal, selectedIndex) {
+							cityId = selectedVal;
+						});
+						nameEl.addEventListener('click', function() {
+							picker.show();
+						});
+						
+						//点击保存
+						$('.correct').click(function(e) {
+							e.stopPropagation();
+							e.preventDefault();
+							var img = $('#top-pdc').find('.avatar').attr('src');
+							var name = $('#name').val();
+							var sex = $('#sex').val();
+							var address = $('#address').val();
+							var deAddress = $('#details-addr').val();
+							if(name == "") {
+								mask('姓名不能为空');
+								return false;
+							}
+							if(sex == "") {
+								mask('请选择性别');
+								return false;
+							}
+							if(address == "") {
+								mask('请选择地址');
+								return false;
+							}
+							if(deAddress == "") {
+								mask('请填写详细地址');
+								return false;
+							}
+
+							$.ajax({
+								type: 'POST',
+								url: reqUrl("client_save"),
+								dataType: 'JSON',
+								async: false,
+								data: {
+									token: token,
+									nickname: "农户",
+									name: name,
+									sex: sex,
+									area: address,
+									address: deAddress
+								},
+								xhrFields: {
+									withCredentials: true
+								},
+								success: function(data) {
+									if(data.success) {
+										mask('修改成功');
+									} else {
+										mask(data.msg)
+									}
+								},
+								error: function(e, request, settings) {
+									alert(settings)
+								}
+							});
+						})
+
+					} else {
+						mask(data.msg);
+					}
+
+				},
+				error: function(e, request, settings) {
+					alert(settings);
+				}
 			});
 		});
 	</script>

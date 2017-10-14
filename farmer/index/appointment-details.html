@@ -26,83 +26,246 @@
 		    </h1>
 		</header>
 		<div class="fad-container">
-			<div class="time">2017/07/31 15:30:05</div>
-			<div class="fad-top">
-				<div class="item-top am-cf">
-					<span class="ordernum am-fl">订单号：201020202</span>
-					<span class="status am-fr">待确认</span>
-				</div>
-				<div class="item-task">
-					<div class="title">作业描述</div>
-					<div class="desc">请帮我把地翻一下, 帮我播种哦，辛苦了。活要干仔细 点哦，拜托了。</div>
-				</div>
-			</div>
-			<div class="fad-center">
-				<div class="task-time">作业时间：2014/01/12</div>
-				<div class="task-state">作业类别：播种</div>
-				<div class="task-addr">地区：济南市历下区</div>
-			</div>
-			<div class="line"></div>
-			<div class="fad-bottom">
-				<div>预约人：牛嬷嬷</div>
-				<div>联系电话：1523562525</div>
-				<div>地址：济南市历次传</div>
-			</div>
-			<!--除待确认状态以外其余状态全部有这条信息-->
-			<div class="fad-infor">
-				<div class="wf-title">
-					<span class="workInfor">机手信息</span>
-				</div>
-				<div class="infor-content">
-					<div class="infor-img"><img src="../../assets/i/person-img.png" width="69" height="69" /></div>
-					<div class="infor-right">
-						<div class="name">机手姓名：<span>来看看</span></div>
-						<div class="phone">联系电话：
-							<a href="javascript:;" data-am-modal="{target: '#my-alert'}">12536525652</a>
-						</div>
-						<div class="carinfor">车辆信息：<span>神农一号·鲁A12345神农一号·鲁A12345</span></div>
+			<script type="text/html" id="template">
+				<div class="time">{{infor.ordertime}}</div>
+				<div class="fad-top">
+					<div class="item-top am-cf">
+						<span class="ordernum am-fl">订单号：{{infor.ordernum}}</span> {{if infor.status == 2 || infor.status == 1}}
+						<span class="status am-fr">待接单</span> {{else if infor.status == 3}}
+						<span class="status am-fr">待确认</span> {{else if infor.status == 4}}
+						<span class="status am-fr">待评价</span> {{else if infor.status == 5}}
+						<span class="status am-fr">已完成</span> {{else if infor.status == '40' || infor.status == '41'}}
+						<span class="status am-fr">待完成</span>{{/if}}
+					</div>
+					<div class="item-task">
+						<div class="title">作业描述</div>
+						<div class="desc">{{infor.demo}}</div>
 					</div>
 				</div>
-			</div>
-			<!--待完成-->
-			<div class="fad-footer am-cf">
-				<a href="javascript:;" class="state am-fr">完成</a>
-			</div>
-			<!--待评价-->
-			<div class="fad-footer am-cf">
-				<a href="evaluate.html" class="state am-fr">去评价</a>
-			</div>
-			<!--已完成-->
-			<!--<div class="fad-footer am-cf">
-				<a href="javascript:;" class="state am-fr">查看评价</a>
-				<span href="javascript:;" class="del am-fr">删除订单</span>
-			</div>-->
-			<!--待确认-->
-			<!--<div class="fad-footer am-cf">
-				<a href="javascript:;" class="state am-fr">确认</a>
-				<span href="javascript:;" class="del am-fr">取消预约</span>
-			</div>-->
-		</div>
-		<!--拨打电话-->
-		<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
-			<div class="am-modal-dialog customer-service">
-				<div class="am-modal-hd title">确定要拨打机手电话</div>
-				<div class="am-modal-bd name">
-					400-9999876
+				<div class="fad-center">
+					<div class="task-time">作业时间：{{infor.donetime}}</div>
+					<div class="task-state">作业类别：{{infor.type_text}}</div>
+					<div class="task-addr">地区：{{infor.province}}{{infor.city}}{{infor.area}}</div>
 				</div>
-				<div class="am-modal-footer">
-					<span class="am-modal-btn del">取消</span>
-					<a href="tel://400-9999876" class="dial">拨打</a>
+				<div class="line"></div>
+				<div class="fad-bottom">
+					<div>预约人：{{infor.clientname}}</div>
+					<div>联系电话：{{infor.tel}}</div>
+					<div>地址：{{infor.caddress}}</div>
 				</div>
-			</div>
+				<!--除待确认状态以外其余状态全部有这条信息-->
+				{{if infor.status != 2 && infor.status != 1}}
+				<div class="fad-infor">
+					<div class="wf-title">
+						<span class="workInfor">机手信息</span>
+					</div>
+					<div class="infor-content">
+						<div class="infor-img"><img src="{{infor.avatar}}" width="69" height="69" /></div>
+						<div class="infor-right">
+							<div class="name">机手姓名：<span>{{infor.mname}}</span></div>
+							<div class="phone">联系电话：
+								<a href="javascript:;" data-am-modal="{target:'#my-alert'}">{{infor.mphone}}</a>
+							</div>
+							<div class="carinfor"><i>车辆信息：</i><span>{{infor.cartname}}·{{infor.cartnum}}·{{infor.model}}·{{infor.carttype}}</span></div>
+						</div>
+					</div>
+				</div>
+				{{/if}} {{if infor.status == '40' || infor.status == '41'}}
+				<!--待完成-->
+				<div class="fad-footer am-cf">
+					<a href="javascript:;" class="state am-fr complete">完成</a>
+				</div>
+				{{else if infor.status == 4}}
+				<!--待评价-->
+				<div class="fad-footer am-cf">
+					<a href="evaluate.html?id={{infor.id}}" class="state am-fr">去评价</a>
+				</div>
+				{{else if infor.status == 5}}
+				<!--已完成-->
+				<div class="fad-footer am-cf">
+					<a href="evaluate-details.html?id={{infor.id}}" class="state am-fr">查看评价</a>
+					<span href="javascript:;" class="del am-fr" id="remove">删除订单</span>
+				</div>
+				{{else if infor.status == 3}}
+				<!--待确认-->
+				<div class="fad-footer am-cf">
+					<a href="javascript:;" class="state am-fr confirm">确认</a>
+					<span href="javascript:;" class="del am-fr cancel">取消预约</span>
+				</div>
+				{{/if}}
+				<!--拨打电话-->
+				<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">
+					<div class="am-modal-dialog customer-service">
+						<div class="am-modal-hd title">确定要拨打机手电话</div>
+						<div class="am-modal-bd name">
+							{{infor.mphone}}
+						</div>
+						<div class="am-modal-footer">
+							<span class="am-modal-btn del">取消</span>
+							<a href="tel://{{infor.mphone}}" class="dial">拨打</a>
+						</div>
+					</div>
+				</div>
+			</script>
 		</div>
+
 	</body>
 	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
 	<script type="text/javascript" src="../../assets/js/common.js"></script>
 	<script type="text/javascript" src="../../assets/js/template.js"></script>
 	<script>
-		$('body').height($(window).height());
+		$(function() {
+			var id = GetQueryString('id');
+			var token = getCookie('token');
+			var para = window.location.search;
+			$.ajax({
+				type: 'POST',
+				url: reqUrl("order_get"),
+				data: {
+					token: token,
+					id: id
+				},
+				dataType: 'JSON',
+				async: false,
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function(data) {
+					if(data.error_code == 200) {
+						window.location.href = preUrl('farmer/log/login.html' + para + '&path=farmer/index/appointment-details.html');
+					} else if(data.success) {
+						var content = template('template', data);
+						$('.fad-container').html(content);
+					} else {
+						mask(data.msg);
+					}
+				},
+				error: function(e, request, settings) {
+					alert(settings);
+				}
+			});
+			//删除订单
+			$('#remove').on('click', function() {
+				$.ajax({
+					type: 'POST',
+					url: reqUrl("order_remove"),
+					data: {
+						token: token,
+						orderid: id
+					},
+					dataType: 'JSON',
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(data) {
+						if(data.error_code == 200) {
+							window.location.href = preUrl('farmer/log/login.html' + para + '&path=farmer/index/appointment-details.html');
+						} else if(data.success) {
+							window.location.href = preUrl('farmer/index/my-appointment.html');
+						} else {
+							mask(data.msg);
+						}
+					},
+					error: function(e, request, settings) {
+						alert(settings);
+					}
+				});
+			});
+			//确认订单
+			$('.confirm').on('click', function() {
+				$.ajax({
+					type: 'POST',
+					url: reqUrl("order_confirm"),
+					data: {
+						token: token,
+						orderid: id
+					},
+					dataType: 'JSON',
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(data) {
+						if(data.error_code == 200) {
+							window.location.href = preUrl('farmer/log/login.html' + para + '&path=farmer/index/appointment-details.html');
+						} else if(data.success) {
+							mask(data.msg);
+							setTimeout(function() {
+								location.reload();
+							}, 1000);
+						} else {
+							mask(data.msg);
+						}
+					},
+					error: function(e, request, settings) {
+						alert(settings);
+					}
+				});
+			});
+			//完成订单
+			$('.complete').on('click', function() {
+				$.ajax({
+					type: 'POST',
+					url: reqUrl("order_done"),
+					data: {
+						token: token,
+						orderid: id,
+						ismachine:''
+					},
+					dataType: 'JSON',
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(data) {
+						if(data.error_code == 200) {
+							window.location.href = preUrl('farmer/log/login.html' + para + '&path=farmer/index/appointment-details.html');
+						} else if(data.success) {
+							mask(data.msg);
+							setTimeout(function() {
+								location.reload();
+							}, 1000);
+						} else {
+							mask(data.msg);
+						}
+					},
+					error: function(e, request, settings) {
+						alert(settings);
+					}
+				});
+			});
+			//取消订单
+			$('.cancel').on('click', function() {
+				$.ajax({
+					type: 'POST',
+					url: reqUrl("order_cancle"),
+					data: {
+						token: token,
+						orderid: id
+					},
+					dataType: 'JSON',
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(data) {
+						if(data.error_code == 200) {
+							window.location.href = preUrl('farmer/log/login.html' + para + '&path=farmer/index/appointment-details.html');
+						} else if(data.success) {
+							window.location.href = preUrl('farmer/index/my-appointment.html');
+							
+						} else {
+							mask(data.msg);
+						}
+					},
+					error: function(e, request, settings) {
+						alert(settings);
+					}
+				});
+			});
+		})
 	</script>
 
 </html>

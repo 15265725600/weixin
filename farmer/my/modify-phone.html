@@ -28,14 +28,14 @@
 		<div class="set-container">
 			<ul class="set-list">
 				<li class="list-item">
-					<a href="modify-phone.html" class="item-href">
-						<input type="text" placeholder="输入新手机号" class="txt"/>
+					<a href="javascript:;" class="item-href">
+						<input type="text" placeholder="输入新手机号" class="txt" id="phone"/>
 					</a>
 				</li>
 				<li class="list-item code-item">
 					<a href="javascript:;" class="item-href">
-						<input type="text" placeholder="输入验证码" class="txt"/>
-						<div class="get-code">获取验证码</div>
+						<input type="text" placeholder="输入验证码" class="txt code"/>
+						<div class="get-code" id="get-code" data = "0">获取验证码</div>
 					</a>
 				</li>
 			</ul>
@@ -49,8 +49,168 @@
 	<script type="text/javascript" src="../../assets/js/common.js"></script>
 	<script type="text/javascript" src="../../assets/js/template.js"></script>
 	<script>
-		$(function(){
-			
+		$(function() {
+			var token = getCookie('token');
+			var mobileprefix = getInfo('mobileprefix');			
+			$('#get-code').click(function() {
+				var phone = $('#phone').val();
+				var data = $(this).attr('data');
+				var codephone = phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+				$('.tel').html(codephone);
+				if(phone && data == 0) {
+					//验证用户是否存在
+					$.ajax({
+						type: 'POST',
+						url: reqUrl('client_verify'),
+						data: {
+							username: phone,
+							mobileprefix:mobileprefix
+						},
+						xhrFields: {
+							withCredentials: true
+						},
+						async: false,
+						dataType: 'JSON',
+						success: function(data) {
+							if(data.error_code == '106') {
+								//获取验证码
+								$.ajax({
+									type: 'POST',
+									url: reqUrl('code_get'),
+									data: {
+										username: phone
+									},
+									xhrFields: {
+										withCredentials: true
+									},
+									async: false,
+									dataType: 'JSON',
+									success: function(data) {
+										if(data.success) {
+											$('.codetxt').show();
+										} else {
+											mask(data.msg);
+										}
+									}
+								});
+								var time = 60;
+
+								function timeCountDown() {
+									if(time == 0) {
+										clearInterval(timer);
+										$('.get-code').html("发送验证码");
+										$('.get-code').attr('data', '0');
+										$('.reg-mask').hide();
+										return true;
+									}
+									$('.get-code').html("(<i>" + time + "</i>s)后重新发送");
+
+									time--;
+									$('.get-code').attr('data', '1');
+									return false;
+								}
+
+								timeCountDown();
+								var timer = setInterval(timeCountDown, 1000);
+
+							} else if(data.success){
+								mask('用户已存在');
+							}else{
+								mask(data.msg);
+							}
+						}
+					})
+				}
+
+			});
+			//点击确定
+			$('.submit').on('click', function() {
+				var phone = $('#phone').val();
+				var code = $('.code').val();
+				if(phone == "") {
+					$('#phone').focus();
+					mask('请输入手机号');
+					return false
+				};
+				if(code == '') {
+					mask('请输入验证码');
+					return false
+				}
+				//验证验证码
+				$.ajax({
+					type: 'POST',
+					url: reqUrl("code_verify"),
+					data: {
+						username: phone,
+						code: code
+					},
+					dataType: 'JSON',
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(data) {
+						if(data.success) {
+							//修改手机号
+							$.ajax({
+								type: 'POST',
+								url: reqUrl("mobile_save"),
+								data: {
+									token: token,
+									new_mobile: phone
+								},
+								dataType: 'JSON',
+								async: false,
+								xhrFields: {
+									withCredentials: true
+								},
+								success: function(data) {
+									if(data.error_code == 200) {
+										window.location.href = preUrl('farmer/log/login.html?path=farmer/my/modify-phone.html');
+									} else if(data.success) {
+										//退出登录
+										$.ajax({
+											type: 'POST',
+											url: reqUrl("client_loginout"),
+											data: {
+												token: token
+											},
+											dataType: 'JSON',
+											async: false,
+											xhrFields: {
+												withCredentials: true
+											},
+											success: function(data) {
+												if(data.error_code == 200) {
+													window.location.href = preUrl('farmer/log/login.html?path=farmer/my/modify-phone.html');
+												} else if(data.success) {
+													window.location.href = preUrl('farmer/log/login.html');
+
+												} else {
+													mask(data.msg);
+												}
+											},
+											error: function(e, request, settings) {
+												alert(settings);
+											}
+										})
+									} else {
+										mask(data.msg);
+									}
+								},
+								error: function(e, request, settings) {
+									alert(settings);
+								}
+							})
+						} else {
+							mask(data.msg);
+						}
+					},
+					error: function(e, request, settings) {
+						alert(settings);
+					}
+				})
+			})
 		});
 	</script>
 

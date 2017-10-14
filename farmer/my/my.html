@@ -16,8 +16,10 @@
 		<div class="my-container">
 			<div class="top"><img src="../../assets/i/my-bg.png" /></div>
 			<div class="content">
-				<div class="left"><img src="../../assets/i/avatar.png" width="70" height="70" /></div>
-				<div class="right">卢卡斯</div>
+				<a href="personal-information.html" class="item-href">
+					<div class="left"><img src="" width="70" height="70" class="avatar"/></div>
+					<div class="right name">卢卡斯</div>
+				</a>
 			</div>
 			<ul class="my-list">
 				<li class="list-item">
@@ -94,6 +96,32 @@
 		$(function() {
 			//退出登录
 			var token = getCookie('token');
+			//获取用户信息
+			$.ajax({
+				url: reqUrl('client_get'),
+				type: 'post',
+				dataType: 'json',
+				data: {
+					token: token,
+					utype: 'client'
+				},
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function(data){
+					if(data.error_code == 200) {
+						window.location.href = preUrl('farmer/log/login.html?path=farmer/my/my.html');
+					} else if(data.success) {
+						var avater = data.infor[0].avatar;
+						if(avater != ""){
+							$('.avatar').attr('src',avater);
+						}else{
+							$('.avatar').attr('src','../../assets/i/my-a@3x.png');
+						}
+						$('.name').html(data.infor[0].name);
+					}
+				}
+			});
 			$('.confirm').on('click',function(){
 				$.ajax({
 					type: 'POST',
@@ -108,7 +136,7 @@
 					},
 					success: function(data) {
 						if(data.error_code == 200){
-							window.location.href = preUrl('farmer/log/login.html?path=my/my.html');
+							window.location.href = preUrl('farmer/log/login.html?path=farmer/my/my.html');
 						}
 						else if(data.success) {
 							window.location.href = preUrl('farmer/log/login.html');
@@ -121,6 +149,7 @@
 					}
 				});
 			});
+			
 		});
 	</script>
 

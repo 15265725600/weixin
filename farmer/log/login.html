@@ -122,10 +122,10 @@
 					mask('请输入密码');
 					return false;
 				};
-//				if(!reg.test(pwd)) {
-//					mask('你输入的密码格式不正确');
-//					return false;
-//				};
+				if(!reg.test(pwd)) {
+					mask('你输入的密码格式不正确');
+					return false;
+				};
 				//登录
 				$.ajax({
 					type: 'POST',
@@ -147,7 +147,15 @@
 							var token = data.infor[0].token;
 							setCookie('token',token,365);
 							setCookie('mobile',data.infor[0].mobile,365);
-							window.location.href = preUrl('farmer/index/index.html');
+							setInfo('mobileprefix',data.infor[0].mobileprefix);
+							setInfo('cid',data.infor[0].id);
+							setInfo('nickname',data.infor[0].nickname);
+							if(path) {
+								window.location.href = preUrl(path);
+							} else {
+								window.location.href = preUrl('farmer/index/index.html');
+							}
+							
 						} else {
 							mask(data.msg);
 						}

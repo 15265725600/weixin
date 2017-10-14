@@ -33,25 +33,26 @@
 		<div class="wfe-container wfed-container">
 			<div class="line"></div>
 			<div class="wfe-evaluate">
+				<script type="text/html" id="content">
 				<div class="top">
 					<span class="title">满意度：</span>
 					<div class="star-box clearfix">
-						<span class="active"></span>
-						<span class="active"></span>
-						<span class="active"></span>
-						<span class="active"></span>
-						<span class="active"></span>
+						<span class="{{1<=infor.replystar?'active':''}}"></span>
+						<span class="{{2<=infor.replystar?'active':''}}"></span>
+						<span class="{{3<=infor.replystar?'active':''}}"></span>
+						<span class="{{4<=infor.replystar?'active':''}}"></span>
+						<span class="{{5<=infor.replystar?'active':''}}"></span>
 					</div>
 				</div>
 				<div class="message">评价：
-					<span class="txt">非常不错，机手很专业，活干的很细致很认真 很好，非常感谢。</span>
+					<span class="txt">{{infor.reply}}</span>
 				</div>
 				<ul class="eva-list am-cf" data-am-widget="gallery" data-am-gallery="{ pureview: true }">
-					<li class="list-item"><img src="../../assets/i/e-img.png" /></li>
-					<li class="list-item"><img src="../../assets/i/e-img.png" /></li>
-					<li class="list-item"><img src="../../assets/i/e-img.png" /></li>
-					<li class="list-item"><img src="../../assets/i/e-img.png" /></li>
+					{{each infor.images as item index}}
+					<li class="list-item"><img src="{{item.imgurl}}" /></li>
+					{{/each}}
 				</ul>
+				</script>
 			</div>
 		</div>
 	</body>
@@ -61,6 +62,36 @@
 	<script type="text/javascript" src="../../assets/js/template.js"></script>
 	<script>
 		$('body').height($(window).height());
+		//查看评价
+		var id = GetQueryString('id');
+		var token = getCookie('token');
+		var para = window.location.search;
+		$.ajax({
+				type: 'POST',
+				url: reqUrl("order_reply_get"),
+				dataType: 'JSON',
+				data:{
+					token:token,
+					orderid:id
+				},
+				async: false,
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function(data) {
+					if(data.error_code == 200) {
+						window.location.href = preUrl('farmer/log/login.html'+para+'&path=farmer/index/evaluate-details.html');
+					} else if(data.success) {
+						var content = template('content', data);
+						$('.wfe-evaluate').html(content);
+					} else {
+						mask(data.msg);
+					};
+				},
+				error: function(e, request, settings) {
+					alert(settings);
+				}
+			});
 	</script>
 
 </html>

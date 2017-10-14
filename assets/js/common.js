@@ -7,12 +7,11 @@ function preUrl(path) {
 //重新登录后点击返回键
 function backUrl(path) {
 	var prevUrl = document.referrer.split('?')[0];
-	var Url = "http://127.0.0.1:8020/hm_wxdd/"+path+"/log/login.html";
+	var Url = "http://127.0.0.1:8020/hm_wxdd/" + path + "/log/login.html";
 	if(prevUrl == Url) {
 		$('.backUrl').attr('href', 'javascript:history.go(-2);');
 	}
 }
-
 
 /*
  *  获取地址栏中的参数
@@ -31,7 +30,6 @@ function reqUrl(path) {
 	var frontUrl = 'http://192.168.2.46/group1/hm_weixin/index.php/Webservice/V100/';
 	return frontUrl + path;
 }
-
 
 var token;
 
@@ -110,12 +108,21 @@ function pickerShow(arr, nameEl, valEl, oper, title) {
 
 	picker.on('picker.select', function(selectedVal, selectedIndex) {
 		valEl.innerHTML = '';
-
+		valEl.setAttribute("data",""); 
 		for(var i = 0; i < arr.length; i++) {
 			if(oper === 0) {
 				valEl.value += arr[i][selectedIndex[i]].text;
+				
+				valEl.data += arr[i][selectedIndex[i]].id;
+				
+				valEl.setAttribute("data",valEl.data); 
+				
+				
 			} else {
 				valEl.innerHTML += arr[i][selectedIndex[i]].text;
+				valEl.data += arr[i][selectedIndex[i]].id;
+				valEl.setAttribute("data",arr[i][selectedIndex[i]].id);
+				
 			}
 		}
 	});

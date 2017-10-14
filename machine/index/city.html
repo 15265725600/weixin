@@ -37,21 +37,47 @@
 				您当前的位置是：<span class="position">山东省济南市高新区</span>
 			</div>
 			<div class="city-wrapper">
-				<div class="wrapper-item">
-					<div class="initial">A</div>
-					<ul class="city-list">
-						<li class="list-item">安阳</li>
-						<li class="list-item">鞍山</li>
-					</ul>
+				<div class="wrapper-item" id="province">
+					<script type="text/html" id="content">
+						{{each infor as item index}}
+						<div class="initial">{{item.charindex}}</div>
+						<ul class="city-list" id="proviceList">
+							{{each item.name.split(",") as i index}}
+							<li class="list-item">{{i}}</li>
+							{{/each}}
+						</ul>
+						{{/each}}
+					</script>
+				</div>
+				<div class="wrapper-item" id = "city">
+					<script type="text/html" id="content1">
+						<ul class="city-list" id="cityList">
+							{{each infor as item index}}
+							<li class="list-item">{{infor.city}}</li>
+							{{/each}}
+						</ul>
+					</script>
+				</div>
+				<div class="wrapper-item" id = "area">
+					<script type="text/html" id="content2">
+						<ul class="city-list" id="areaList">
+							{{each infor as item index}}
+							<li class="list-item">{{infor.area}}</li>
+							{{/each}}
+						</ul>
+					</script>
 				</div>
 			</div>
 			<!--级联效果样式-->
-			<div class="cascade-wrapper">
+			<!--<div class="cascade-wrapper">
 				<ul class="city-list">
-					<li class="list-item">安阳</li>
-					<li class="list-item">鞍山</li>
+					<script type="text/html" id="content">
+						{{each infor as item index}}
+						<li class="list-item">安阳</li>
+						{{/each}}
+					</script>
 				</ul>
-			</div>
+			</div>-->
 			<!-- 首字母列表 -->
 			<ul class="alpha-list">
 				<li>
@@ -143,7 +169,48 @@
 		$(function() {
 			$('.ser-txt').focus(function() {
 				$('.word').hide();
-			})
+			});
+			//获取所有省份
+			getPosition("");
+			//获取所有城市
+			$('#province li').on('click',function(){
+				var keyword = $(this).text();
+				$(this).parent().next().show().siblings().hide();
+				getPosition(keyword);
+			});
+			
+			function getPosition(keyWord) {
+				$.ajax({
+					type: 'POST',
+					url: reqUrl("position"),
+					dataType: 'JSON',
+					data: {
+						keyword: "",
+						isinit: true
+					},
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(data) {
+						if(data.success) {
+							var content = template('content', data);
+							var content1 = template('content', data);
+							var content2 = template('content', data);
+							$('#province').html(content);
+							$('#city').html(content1);
+							$('#area').html(content2);
+
+						} else {
+							mask(data.msg);
+						}
+					},
+					error: function(e, request, settings) {
+						alert(settings);
+					}
+				});
+			}
+
 		})
 	</script>
 

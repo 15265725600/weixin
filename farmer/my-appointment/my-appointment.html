@@ -10,6 +10,7 @@
 		<title>微信订单管理</title>
 		<link rel="stylesheet" href="../../assets/css/amazeui.css">
 		<link rel="stylesheet" href="../../assets/css/style.css">
+		<link href="../../assets/css/LCalendar.css" rel="stylesheet">
 	</head>
 
 	<body>
@@ -26,33 +27,34 @@
 		    </h1>
 		</header>
 		<div class="ma-container">
-			<div class="choose-item am-cf">
+			<div class="choose-item am-cf" id="choose-addr">
 				<span class="left">选择地区</span>
-				<span class="right am-fr">请选择</span>
+				<span class="right am-fr" id="address">请选择</span>
 				<i class="arrow-right"></i>
 			</div>
 			<div class="choose-item"><textarea name="" rows="3" cols="" class="addr-txt" placeholder="在此输入详细地址"></textarea></div>
 			<div class="choose-item am-cf">
 				<span class="left">作业时间</span>
-				<span class="right am-fr">请选择</span>
+				<input type="text" value="请选择" class="docs-date right am-fr" />
+				<!--<span class="right am-fr">请选择</span>-->
 				<i class="arrow-right"></i>
 			</div>
-			<div class="choose-item am-cf">
+			<div class="choose-item am-cf" id="categoryDiv">
 				<span class="left">作业类别</span>
-				<span class="right am-fr">请选择</span>
+				<span class="right am-fr" id="category" data>请选择</span>
 				<i class="arrow-right"></i>
 			</div>
 			<div class="desc">
 				<p>作业描述</p>
-				<textarea name="" rows="4" cols="" placeholder="在此进行作业描述(限制200字)..." class="work-desc"></textarea>
+				<textarea name="" rows="4" cols="" placeholder="在此进行作业描述(限制200字)..." class="work-desc" onkeyup="checkLength(this)"></textarea>
 			</div>
 			<div class="write-item am-cf">
 				<span class="left">联系人手机</span>
-				<input type="text" class="txt am-fr" placeholder="请填写"/>
+				<input type="text" class="txt am-fr tel" placeholder="请填写" onkeyup="value=value.replace(/[^\d]/g,'') "/>
 			</div>
 			<div class="write-item am-cf">
 				<span class="left">联系人姓名</span>
-				<input type="text" class="txt am-fr" placeholder="请填写"/>
+				<input type="text" class="txt am-fr name" placeholder="请填写" />
 			</div>
 			<div class="release">发布预约</div>
 		</div>
@@ -85,9 +87,246 @@
 	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
 	<script type="text/javascript" src="../../assets/js/common.js"></script>
 	<script type="text/javascript" src="../../assets/js/template.js"></script>
+	<script type="text/javascript" src="../../assets/js/LCalendar.js"></script>
+	<script type="text/javascript" src="../../assets/js/picker.min.js"></script>
 	<script>
-		$(function(){
-			
+		//限制字数
+		function checkLength(which) {
+			var maxChars = 200;
+			if(which.value.length > maxChars)
+				which.value = which.value.substring(0, maxChars);
+		}
+		$(function() {
+			var token = getCookie('token');
+			//选择时间
+			var calendar = new LCalendar();
+			calendar.init({
+				'trigger': '.docs-date', //标签id
+				'type': 'date', //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+				'minDate': '1900-1-1', //最小日期
+				'maxDate': new Date().getFullYear() + 10 + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() //最大日期
+			});
+			//获取城市列表
+			var city = [];
+			$.ajax({
+				type: 'POST',
+				url: reqUrl("position_all"),
+				dataType: 'JSON',
+				async: false,
+				xhrFields: {
+					withCredentials: true
+				},
+				success: function(data) {
+					city = data.infor.listItems;
+				},
+				error: function(e, request, settings) {
+					alert(settings);
+				}
+			});
+			//获取地址
+			var cityId = [];
+			var nameEl = document.getElementById('choose-addr');
+			var addr = document.getElementById('address');
+			var address = "";
+			var first = []; /* 省，直辖市 */
+			var second = []; /* 市 */
+			var third = []; /* 镇 */
+
+			var checked = [0, 0, 0]; /* 已选选项 */
+
+			function creatList(obj, list) {
+				obj.forEach(function(item, index, arr) {
+					var temp = new Object();
+					temp.text = item.name;
+					temp.value = item.id;
+					list.push(temp);
+				})
+			};
+			creatList(city, first); // 省
+
+			if(city[0].hasOwnProperty('children')) {
+				creatList(city[0].children, second); //市
+			} else {
+				second = [{
+					text: '',
+					value: 0
+				}];
+			}
+
+			if(city[0].children[0].hasOwnProperty('children')) {
+				creatList(city[0].children[0].children, third); //区
+			} else {
+				third = [{
+					text: '',
+					value: 0
+				}];
+			}
+
+			var picker = new Picker({
+				data: [first, second, third],
+				selectedIndex: [0, 0, 0],
+				title: ''
+			});
+
+			picker.on('picker.select', function(selectedVal, selectedIndex) {
+				var text1 = first[selectedIndex[0]].text;
+				var text2 = second[selectedIndex[1]].text;
+				var text3 = third[selectedIndex[2]] ? third[selectedIndex[2]].text : '';
+				addr.innerHTML = text1 + ',' + text2 + ',' + text3;
+			});
+
+			picker.on('picker.change', function(index, selectedIndex) {
+				if(index === 0) {
+					firstChange();
+				} else if(index === 1) {
+					secondChange();
+				}
+
+				function firstChange() {
+					second = [];
+					third = [];
+					checked[0] = selectedIndex;
+					var firstCity = city[selectedIndex];
+					if(firstCity.hasOwnProperty('children')) {
+						creatList(firstCity.children, second);
+
+						var secondCity = city[selectedIndex].children[0]
+						if(secondCity.hasOwnProperty('children')) {
+							creatList(secondCity.children, third);
+						} else {
+							third = [{
+								text: '',
+								value: 0
+							}];
+							checked[2] = 0;
+						}
+					} else {
+						second = [{
+							text: '',
+							value: 0
+						}];
+						third = [{
+							text: '',
+							value: 0
+						}];
+						checked[1] = 0;
+						checked[2] = 0;
+					}
+
+					picker.refillColumn(1, second);
+					picker.refillColumn(2, third);
+					picker.scrollColumn(1, 0)
+					picker.scrollColumn(2, 0)
+				}
+
+				function secondChange() {
+					third = [];
+					checked[1] = selectedIndex;
+					var first_index = checked[0];
+					if(city[first_index].children.children[selectedIndex].hasOwnProperty('children')) {
+						var secondCity = city[first_index].children[selectedIndex];
+						creatList(secondCity.children, third);
+						picker.refillColumn(2, third);
+						picker.scrollColumn(2, 0)
+					} else {
+						third = [{
+							text: '',
+							value: 0
+						}];
+						checked[2] = 0;
+						picker.refillColumn(2, third);
+						picker.scrollColumn(2, 0)
+					}
+				}
+
+			});
+
+			picker.on('picker.valuechange', function(selectedVal, selectedIndex) {
+				cityId = selectedVal;
+			});
+			nameEl.addEventListener('click', function() {
+				picker.show();
+			});
+
+			//作业类别
+			var shopType = [];
+			$.ajax({
+				type: 'POST',
+				url: reqUrl("order_type"),
+				dataType: 'JSON',
+				async: false,
+				xhrFields: {
+					withCredentials: true
+				},
+				data: {
+					token: token
+				},
+				success: function(data) {
+					if(data.error_code == 200) {
+						window.location.href = preUrl('farmer/log/login.html?path=farmer/my-appointment/my-appointment.html')
+					} else if(data.success) {
+						var shopCla = document.getElementById('categoryDiv');
+						var shopval = document.getElementById('category')
+						var arrLen = data.infor;
+						for(var i = 1; i <= arrLen.length; i++) {
+							var item = {
+								text: data.infor[i - 1].name,
+								value: i,
+								id: data.infor[i - 1].id
+							}
+							shopType.push(item);
+						}
+						pickerShow([shopType], categoryDiv, category, 1, "");
+					} else {
+						mask(data.msg)
+					}
+
+				}
+			});
+			//发布预约
+			$('.release').on('click', function() {
+				var cid = getInfo('cid');
+				var nickname = getInfo('nickname');
+				var position = $('#address').html();
+				var totaladdress = $(".addr-txt").val();
+				var donetime = $('.docs-date').val();
+				var type = $('#category').attr('data');
+				var demo = $('.work-desc').val();
+				var tel = $('.tel').val();
+				var clientname = $('.name').val();
+				$.ajax({
+					type: 'POST',
+					url: reqUrl("order_add"),
+					dataType: 'JSON',
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					data: {
+						token: token,
+						cid:cid,
+						nickname:nickname,
+						position:position,
+						totaladdress:totaladdress,
+						donetime:donetime,
+						type:type,
+						demo:demo,
+						tel:tel,
+						clientname:clientname
+					},
+					success: function(data) {
+						if(data.error_code == 200) {
+							window.location.href = preUrl('farmer/log/login.html?path=farmer/my-appointment/my-appointment.html')
+						} else if(data.success) {
+							mask('预约成功');
+						} else {
+							mask(data.msg)
+						}
+
+					}
+				});
+			});
+
 		});
 	</script>
 
