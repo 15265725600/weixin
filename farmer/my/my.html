@@ -15,11 +15,22 @@
 	<body>
 		<div class="my-container">
 			<div class="top"><img src="../../assets/i/my-bg.png" /></div>
-			<div class="content">
-				<a href="personal-information.html" class="item-href">
-					<div class="left"><img src="" width="70" height="70" class="avatar"/></div>
-					<div class="right name">卢卡斯</div>
-				</a>
+			<div class="content" id="my-con">
+				<script type="text/html" id="my-content">
+					<a href="personal-information.html" class="item-href">
+						<div class="left">
+							{{if infor[0].avatar == ""}}
+							<img src="../../assets/i/my-a@3x.png" width="70" height="70" class="avatar" />
+							{{else}}
+							<img src="{{infor[0].avatar}}" width="70" height="70" class="avatar" />
+							{{/if}}
+						</div>
+						<div class="right">
+							<div class="name">{{infor[0].name}}</div>
+							<!--<div class="work-num">{{infor[0].number}}</div>-->
+						</div>
+					</a>
+				</script>
 			</div>
 			<ul class="my-list">
 				<li class="list-item">
@@ -47,7 +58,7 @@
 					</a>
 				</li>
 				<li class="list-item">
-					<a href="javascript:;" class="item-href" data-am-modal="{target: '#my-alert'}">
+					<a href="javascript:;" class="item-href out_login">
 						<span>退出当前账号</span>
 					</a>
 				</li>
@@ -112,16 +123,15 @@
 					if(data.error_code == 200) {
 						window.location.href = preUrl('farmer/log/login.html?path=farmer/my/my.html');
 					} else if(data.success) {
-						var avater = data.infor[0].avatar;
-						if(avater != ""){
-							$('.avatar').attr('src',avater);
-						}else{
-							$('.avatar').attr('src','../../assets/i/my-a@3x.png');
-						}
-						$('.name').html(data.infor[0].name);
+						var con = template('my-content', data);
+						$('#my-con').html(con);
 					}
 				}
 			});
+			
+			$('.out_login').click(function(){
+			  $('#my-alert').modal();
+			})
 			$('.confirm').on('click',function(){
 				$.ajax({
 					type: 'POST',
@@ -139,6 +149,7 @@
 							window.location.href = preUrl('farmer/log/login.html?path=farmer/my/my.html');
 						}
 						else if(data.success) {
+							removeInfo('city');
 							window.location.href = preUrl('farmer/log/login.html');
 						} else {
 							mask(data.msg);

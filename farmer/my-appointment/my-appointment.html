@@ -35,7 +35,7 @@
 			<div class="choose-item"><textarea name="" rows="3" cols="" class="addr-txt" placeholder="在此输入详细地址"></textarea></div>
 			<div class="choose-item am-cf">
 				<span class="left">作业时间</span>
-				<input type="text" value="请选择" class="docs-date right am-fr" />
+				<input type="text" value="请选择" class="docs-date right am-fr" readonly="readonly"/>
 				<!--<span class="right am-fr">请选择</span>-->
 				<i class="arrow-right"></i>
 			</div>
@@ -103,7 +103,7 @@
 			calendar.init({
 				'trigger': '.docs-date', //标签id
 				'type': 'date', //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
-				'minDate': '1900-1-1', //最小日期
+				'minDate': new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(), //最小日期
 				'maxDate': new Date().getFullYear() + 10 + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate() //最大日期
 			});
 			//获取城市列表
@@ -294,6 +294,34 @@
 				var demo = $('.work-desc').val();
 				var tel = $('.tel').val();
 				var clientname = $('.name').val();
+				if(position == "请选择"){
+					mask('请选择地区');
+					return false;
+				}
+				if(totaladdress ==　""){
+					mask('请填写详细地址');
+					return false;
+				}
+				if(donetime ==　"请选择"){
+					mask('请选择作业时间');
+					return false;
+				}
+				if(type ==　"请选择"){
+					mask('请选择作业类别');
+					return false;
+				}
+				if(demo ==　""){
+					mask('请填写作业描述');
+					return false;
+				}
+				if(tel ==　""){
+					mask('请填写联系人手机号');
+					return false;
+				}
+				if(clientname ==　""){
+					mask('请填写联系人姓名');
+					return false;
+				}
 				$.ajax({
 					type: 'POST',
 					url: reqUrl("order_add"),
@@ -319,6 +347,9 @@
 							window.location.href = preUrl('farmer/log/login.html?path=farmer/my-appointment/my-appointment.html')
 						} else if(data.success) {
 							mask('预约成功');
+							setTimeout(function(){
+								window.location.href = preUrl('farmer/index/index.html');
+							},2000);
 						} else {
 							mask(data.msg)
 						}

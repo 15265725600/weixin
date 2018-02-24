@@ -1,6 +1,8 @@
 //页面地址前缀
 function preUrl(path) {
 	var fUrl = 'http://127.0.0.1:8020/hm_wxdd/';
+//	var fUrl = 'http://192.168.2.74:8020/hm_wxdd/';
+//	var fUrl = 'http://124.128.23.74:8008/group26/hm_weixin/html/hm_wxdd/';
 	return fUrl + path;
 }
 
@@ -27,7 +29,7 @@ function GetQueryString(name) {
 
 //ajax 传参url
 function reqUrl(path) {
-	var frontUrl = 'http://192.168.2.46/group1/hm_weixin/index.php/Webservice/V100/';
+	var frontUrl = 'http://124.128.23.74:8008/group26/hm_weixin/index.php/Webservice/V100/';
 	return frontUrl + path;
 }
 

@@ -57,7 +57,8 @@
 					url: reqUrl("advice_add"),
 					data: {
 						token:token,
-						content:message
+						content:message,
+						isMachine:true
 					},
 					dataType: 'JSON',
 					async: false,
@@ -70,6 +71,9 @@
 						}
 						else if(data.success) {
 							mask('提交成功');
+							setTimeout(function(){
+								window.location.href = preUrl('machine/my/my.html');
+							},2000);
 						} else {
 							mask(data.msg);
 						}

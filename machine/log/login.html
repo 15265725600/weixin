@@ -35,22 +35,10 @@
 				<span class="del"></span>
 				<i class="arrow-down"></i>
 				<ul class="number-list">
-					<li class="list-item">
+					<!--<li class="list-item">
 						<span class="number">15265256254</span>
 						<i class="del-num">x</i>
-					</li>
-					<li class="list-item">
-						<span class="number">15265256254</span>
-						<i class="del-num">x</i>
-					</li>
-					<li class="list-item">
-						<span class="number">15265256254</span>
-						<i class="del-num">x</i>
-					</li>
-					<li class="list-item">
-						<span class="number">15265256254</span>
-						<i class="del-num">x</i>
-					</li>
+					</li>-->
 				</ul>
 			</div>
 			<div class="log-code">
@@ -60,7 +48,7 @@
 			<div class="login active">登录</div>
 			<div class="other am-cf">
 				<div class="left am-fl"><span class="remember"></span>记住密码</div>
-				<a href="javascript:;" class="forget am-fr" data-am-modal="{target:'#my-confirm'}">忘记密码？</a>
+				<a href="javascript:;" class="forget am-fr">忘记密码？</a>
 			</div>
 		</div>
 		<!--忘记密码弹出框-->
@@ -111,16 +99,128 @@
 			$('.del').on('click', function() {
 				$(this).siblings('.txt').val('');
 			});
-			//点击x号
-			$('.del-num').on('click', function() {
-				$(this).parent().remove();
-			});
-			//勾选记住密码
+
+			//判断是否有记录
+			var inforarr = JSON.parse(window.localStorage.getItem('infor'));
+			if(inforarr == null) {
+				inforarr = [];
+			} else {
+				inforarr = JSON.parse(window.localStorage.getItem('infor'));
+				var arrLen = inforarr.length;
+				$('.phone').val(inforarr[0].anr);
+				$('.code').val(inforarr[0].pwd);
+				$('.remember').addClass('active');
+			}
+			//判断是否重复
+			var repeat = false;
+
 			$('.remember').on('click', function() {
+
+				var username = $('.phone').val();
+				var pwd = $('.code').val();
+				if(username == "") {
+					mask('请输入手机号');
+					return false;
+				};
+				if(pwd == "") {
+					mask('请输入密码');
+					return false;
+				};
 				$(this).toggleClass('active');
+				var obj = {
+					anr: username,
+					pwd: pwd
+				}
+					//重复不保存
+					for(var i = 0; i < arrLen; i++) {
+						if(username == inforarr[i].anr) {
+							repeat = true;
+							console.log('重复了')
+						} else {
+
+						}
+					}
+					if(repeat == false) {
+						if(arrLen < 3) {
+							inforarr.unshift(obj);
+							console.log(inforarr)
+						} else {
+							inforarr.pop();
+							inforarr.unshift(obj);
+						}
+					}
+
 			});
+			//展示账号密码记录
+			console.log(window.localStorage.getItem('infor'));
+			var content = '';
+			for(var i = 0; i < arrLen; i++) {
+				content += '<li class="list-item"><span class="number" index=' + inforarr[i].pwd + '>' + inforarr[i].anr + '</span><i class="del-num">x</i></li>'
+			}
+			$('.number-list').html(content);
+			//删除其中一个记录
+			$('.number-list li').on('click', '.del-num', function(e) {
+				e.stopPropagation();
+				e.preventDefault();
+				var _obj = {
+					anr: $(this).prev('.number').html(),
+					pwd: $(this).prev('.number').attr('index')
+				};
+				$(this).parents('.list-item').remove();
+				removeObj(inforarr, _obj);
+				window.localStorage.setItem('infor', JSON.stringify(inforarr));
+			});
+
+			$('.number-list li').on('click', function() {
+				$('.phone').val($(this).find('.number').html());
+				$('.code').val($(this).find('.number').attr('index'));
+				$('.number-list').hide();
+				$('.arrow-down').removeClass('active');
+				$('.remember').addClass('active');
+			});
+
+			//删除相同的对象
+			function removeObj(_arr, _obj) {
+				for(var i = 0; i < arrLen; i++) {
+					console.log(_arr[i])
+					console.log(_obj)
+					if(equal(_arr[i], _obj) == true) {
+						if(i == 0) {
+							_arr.shift(); //删除并返回数组的第一个元素
+							return;
+						} else if(i == arrLen - 1) {
+							_arr.pop(); //删除并返回数组的最后一个元素
+							return;
+						} else {
+							_arr.splice(i, 1); //删除下标为i的元素
+							return;
+						}
+					}
+				}
+
+			}
+			//判断对象是否相等
+			function equal(a, b) {
+				var aProps = Object.getOwnPropertyNames(a);
+				var bProps = Object.getOwnPropertyNames(b);
+				if(aProps.length != bProps.length) {
+					return false;
+				}
+				for(var i = 0; i < aProps.length; i++) {
+					var propName = aProps[i];
+					if(a[propName] !== b[propName]) {
+						return false;
+					}
+				}
+				return true;
+			}
+      
+      $('.forget').click(function(){
+        $('#my-phone').modal();
+      })
+      
 			//登录
-			$('.login').on('click', function() {
+			$('.login').click(function() {
 				var username = $('.phone').val();
 				var pwd = $('.code').val();
 				if(username == "") {
@@ -154,6 +254,10 @@
 							if(path) {
 								window.location.href = preUrl(path);
 							} else {
+								var ifreme = $('.remember').hasClass('active');
+								if(ifreme == true) {
+									window.localStorage.setItem('infor', JSON.stringify(inforarr));
+								}
 								window.location.href = preUrl('machine/index/index.html');
 							}
 
@@ -181,8 +285,6 @@
 					if(data.success) {
 						var content = template('content', data);
 						$('.customer-service').html(content);
-//						var tel = data.infor;
-//						$('#tel').html(tel);
 						$("#tel").on('click', function() {
 							$('#my-phone').modal();
 						});
@@ -195,6 +297,7 @@
 					alert(settings);
 				}
 			});
+			
 
 		});
 	</script>

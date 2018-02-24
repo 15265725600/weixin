@@ -10,13 +10,14 @@
 		<title>微信订单管理</title>
 		<link rel="stylesheet" href="../../assets/css/amazeui.css">
 		<link rel="stylesheet" href="../../assets/css/style.css">
+		<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=8cf1a81ed325757401fa24e4822e2c25&plugin=AMap.CitySearch"></script>
 	</head>
 
 	<body>
 		<header data-am-widget="header" class="am-header header am-header-fixed">
 			<div class="index-header">
 				<span class="icon-gps"></span>
-				<a href="city.html" class="wf-position">中国 - 山东省济南市高新区</a>
+				<a href="city.html" class="wf-position" id="city"></a>
 			</div>
 		</header>
 		<div class="wf-container">
@@ -50,18 +51,17 @@
 										<div class="item-top am-cf">
 											<span class="time am-fl">{{item.ordertime}}</span> {{if item.status == 2 || item.status == 1}}
 											<span class="status am-fr">待接单</span> {{else if item.status == 5}}
-											<span class="status am-fr">已完成</span> {{else if item.status == '40' || item.status == '41'}}
-											<span class="status am-fr">待完成</span> {{/if}}
+											<span class="status am-fr">已完成</span> {{else if item.status == '40' || item.status == '41' || item.status == '4'}}
+											<span class="status am-fr">待完成</span>{{else if item.status == 3}}
+											<span class="status am-fr">待确认</span>{{else if item.status == 8}}
+											<span class="status am-fr">已删除</span>{{/if}}
 										</div>
 										<div class="item-task">
 											<div class="title">作业描述</div>
 											<div class="desc">{{item.demo}}</div>
 										</div>
 										<div class="bottom">
-											{{if item.type == 1}}
-											<span class="keyWord">播种</span> {{else if item.type == 2}}
-											<span class="keyWord">深耕</span> {{else if item.type == 3}}
-											<span class="keyWord">收货</span> {{/if}}
+											<span class="keyWord">{{item.type_text}}</span>
 											<span class="address">{{item.province}}{{item.city}}{{item.area}}</span>
 										</div>
 									</a>
@@ -80,11 +80,12 @@
 					<div class="title-right am-fr">
 						<span class="icon-infor"></span>
 						<a href="information.html" class="more">更多</a>
+						<i class="red-dot"></i>
 					</div>
 				</div>
 				<ul class="infor-wrapper">
 					<script type="text/html" id="content">
-						{{each listItems as item index}}
+						{{if totalCount != 0}} {{each listItems as item index}}
 						<li class="list-item">
 							<a href="javascript:;" class="item-href">
 								<div class="item-top">
@@ -99,7 +100,15 @@
 								</div>
 							</a>
 						</li>
-						{{/each}}
+						{{/each}} {{else}}
+						<!--无消息-->
+						<div class="wrapper-img">
+							<img src="../../assets/i/n-appoint.png" class="am-center" width="100" height="100" />
+							<div class="wrapper-target">
+								<span>暂无消息</span>
+							</div>
+						</div>
+						{{/if}}
 					</script>
 				</ul>
 			</div>
@@ -136,13 +145,39 @@
 	<script>
 		$(function() {
 			var token = getCookie('token');
+			var city = getInfo('city');
+			if(city == null){
+				showCityInfo();
+			}else{
+				$('#city').html(city);
+			}
+			//获取用户所在城市信息
+			function showCityInfo() {
+				//实例化城市查询类
+				var citysearch = new AMap.CitySearch();
+				//自动获取用户IP，返回当前城市
+				citysearch.getLocalCity(function(status, result) {
+					if(status === 'complete' && result.info === 'OK') {
+						if(result && result.city && result.bounds) {
+							var cityinfo = result.city;
+							console.log(cityinfo);
+//							setInfo('city_name', cityinfo);
+							document.getElementById('city').innerHTML = cityinfo;
+
+						}
+					} else {
+						document.getElementById('city').innerHTML = result.info;
+					}
+				});
+			}
+
 			//订单列表
 			$.ajax({
 				type: 'POST',
 				url: reqUrl("order_list"),
 				data: {
 					token: token,
-					status: '2,40,41,5',
+					status: '1,2,3,40,41,4,5,8',
 					limit: 3,
 					page: ''
 				},
@@ -185,6 +220,15 @@
 					} else if(data.success) {
 						var content = template('content', data.infor);
 						$('.infor-wrapper').html(content);
+						var count = data.infor.totalCount;
+						if(count != 0) {
+							var list = data.infor.listItems;
+							for(var i = 0; i < list.length; i++) {
+								if(list[i].looktype == 1) {
+									$('.red-dot').show();
+								}
+							}
+						}
 					} else {
 						mask(data.msg);
 					}

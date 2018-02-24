@@ -55,6 +55,9 @@ em,
 i {
   font-style: normal;
 }
+.height {
+  height: 100%;
+}
 body {
   position: relative;
   padding: 0;
@@ -139,6 +142,10 @@ input.rt[type=checkbox]:checked:after {
 input.rt[type=checkbox] {
   background: #fff;
 }
+a:hover,
+a:focus {
+  color: #000;
+}
 .clearfix:after {
   content: "";
   height: 0;
@@ -172,9 +179,9 @@ input.rt[type=checkbox] {
   float: left;
   margin-right: 5px;
   position: relative;
-  /*width:66px;
-    height:66px;*/
-  /*border: 1px solid #bdbdbd;*/
+  width: 66px;
+  height: 66px;
+  border: 1px solid #bdbdbd;
   box-sizing: border-box;
 }
 .upload-wrap .upload img {

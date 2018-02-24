@@ -51,13 +51,7 @@
 								<div class="desc">{{item.demo}}</div>
 							</div>
 							<div class="bottom">
-								{{if item.type == 1}}
-								<span class="keyWord">播种</span>
-								{{else if item.type == 2}}
-								<span class="keyWord">深耕</span>
-								{{else if item.type == 3}}
-								<span class="keyWord">收货</span>
-								{{/if}}
+								<span class="keyWord">{{item.type_text}}</span>
 								<span class="address">{{item.province}}{{item.city}}{{item.area}}</span>
 							</div>
 						</a>

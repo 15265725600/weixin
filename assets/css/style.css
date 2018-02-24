@@ -179,10 +179,14 @@ a:focus {
   float: left;
   margin-right: 5px;
   position: relative;
-  /*width:66px;
-    height:66px;*/
-  /*border: 1px solid #bdbdbd;*/
+  width: 64px;
+  height: 64px;
+  border: 1px solid #bdbdbd;
   box-sizing: border-box;
+}
+.upload-btn {
+  background: url(../i/add.png) no-repeat center;
+  background-size: 64px 64px;
 }
 .upload-wrap .upload img {
   width: 66px;
@@ -190,8 +194,8 @@ a:focus {
   border-radius: 2px;
 }
 .upload-wrap .upload li input[type="file"] {
-  width: 66px;
-  height: 66px;
+  width: 64px;
+  height: 64px;
   position: absolute;
   left: 0;
   top: 0;
@@ -360,6 +364,36 @@ a:focus {
   top: 1px;
   left: 9px;
 }
+.wf-title .red-dot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  top: 3px;
+  right: 26px;
+  background: #f16046;
+  border-radius: 50%;
+  display: none;
+}
+.wrapper-img {
+  padding: 38px 0 29px 0;
+}
+.wrapper-img .wrapper-target {
+  text-align: center;
+  margin-top: 21px;
+}
+.wrapper-img .wrapper-target span {
+  color: #b4b4b4;
+  font-size: 13px;
+  margin-right: 7px;
+}
+.wrapper-img .wrapper-target .go-to {
+  display: inline-block;
+  padding: 0 8px;
+  border: 1px solid #f16046;
+  color: #f16046;
+  font-size: 15px;
+}
 .wf-appointment {
   background-color: #ffffff;
 }
@@ -439,6 +473,29 @@ a:focus {
   color: #858585;
   font-size: 13px;
   margin-left: 5px;
+}
+.wf-information .wrapper-img,
+.wfi-wrapper .wrapper-img {
+  padding: 38px 0 29px 0;
+}
+.wf-information .wrapper-img .wrapper-target,
+.wfi-wrapper .wrapper-img .wrapper-target {
+  text-align: center;
+  margin-top: 21px;
+}
+.wf-information .wrapper-img .wrapper-target span,
+.wfi-wrapper .wrapper-img .wrapper-target span {
+  color: #b4b4b4;
+  font-size: 13px;
+  margin-right: 7px;
+}
+.wf-information .wrapper-img .wrapper-target .go-to,
+.wfi-wrapper .wrapper-img .wrapper-target .go-to {
+  display: inline-block;
+  padding: 0 8px;
+  border: 1px solid #f16046;
+  color: #f16046;
+  font-size: 15px;
 }
 .wf-information .infor-wrapper,
 .wfi-wrapper .infor-wrapper {
@@ -827,6 +884,7 @@ a:focus {
   color: #ffffff;
   font-size: 14px;
   margin-left: 10px;
+  cursor: pointer;
 }
 .wfa-wrapper .wrapper-list .list-item .item-status .del {
   display: inline-block;
@@ -836,6 +894,7 @@ a:focus {
   border: 1px solid #d9d9d9;
   color: #858585;
   font-size: 14px;
+  cursor: pointer;
 }
 /*预约详情*/
 .fad-container {
@@ -997,6 +1056,7 @@ a:focus {
   color: #ffffff;
   font-size: 14px;
   margin-left: 10px;
+  cursor: pointer;
 }
 .fad-footer .del {
   display: inline-block;
@@ -1007,6 +1067,7 @@ a:focus {
   box-sizing: border-box;
   color: #ffffff;
   font-size: 14px;
+  cursor: pointer;
 }
 /*评价*/
 .wfe-container {
@@ -1182,6 +1243,7 @@ a:focus {
   font-size: 16px;
   border-radius: 5px;
   margin: auto;
+  cursor: pointer;
 }
 /*评价详情*/
 .correct {
@@ -1426,6 +1488,7 @@ a:focus {
   border-radius: 5px;
   margin: auto;
   margin-top: 40px;
+  cursor: pointer;
 }
 .set-container .codetxt {
   display: none;
@@ -1621,6 +1684,7 @@ a:focus {
   border-radius: 5px;
   margin: auto;
   margin-top: 23px;
+  cursor: pointer;
 }
 /*登录*/
 .log-container {
@@ -1640,7 +1704,7 @@ a:focus {
   font-size: 15px;
   display: inline-block;
   height: 100%;
-  width: 100%;
+  width: 85%;
 }
 .log-container .log-number,
 .log-container .log-code {
@@ -1723,6 +1787,8 @@ a:focus {
   font-size: 20px;
   color: #858585;
   vertical-align: top;
+  width: 20px;
+  z-index: 1000000;
 }
 .log-container .login {
   width: 88%;
@@ -1781,6 +1847,37 @@ a:focus {
   text-align: center;
   display: none;
 }
+.wx_log {
+  text-align: center;
+  margin-top: -64px;
+}
+.wx_log .title {
+  width: 140px;
+  margin: auto;
+  position: relative;
+  color: #acacac;
+}
+.wx_log .title:after {
+  content: "";
+  position: absolute;
+  width: 40%;
+  height: 1px;
+  background: #acacac;
+  top: 50%;
+  left: 100%;
+}
+.wx_log .title:before {
+  content: "";
+  position: absolute;
+  width: 40%;
+  height: 1px;
+  background: #acacac;
+  top: 50%;
+  right: 100%;
+}
+.wx_log img {
+  margin: 20px auto 10px;
+}
 /*国别码侧边栏*/
 .side-bar {
   background: #fff;
@@ -1833,6 +1930,7 @@ a:focus {
 /*城市定位*/
 .city-container {
   position: relative;
+  padding-bottom: 30px;
 }
 .city-container .city-search {
   padding: 10px 0;
@@ -1847,10 +1945,14 @@ a:focus {
   outline: none;
   width: 88%;
   padding: 5px;
+  text-align: center;
+  color: #858585;
+  font-size: 14px;
 }
 .city-container .city-search .search-con .word {
   display: inline-block;
-  width: 120px;
+  width: 12px;
+  height: 12px;
   background-repeat: no-repeat;
   background-size: 12px 12px;
   background-image: url("../i/search.png");
@@ -1859,10 +1961,10 @@ a:focus {
   vertical-align: top;
   background-position: left center;
   position: absolute;
-  left: 50%;
+  left: 45%;
   top: 50%;
   margin-left: -60px;
-  margin-top: -10px;
+  margin-top: -6px;
   padding-left: 16px;
 }
 .city-container .city-search .search-con .cancel {
@@ -1876,9 +1978,15 @@ a:focus {
   font-size: 12px;
 }
 .city-container .cur-position .position {
-  padding: 2px 5px;
   background: #070707;
   color: #ffffff;
+}
+.city-container .cur-position .position.active {
+  padding: 2px 5px;
+}
+.city-container .city-wrapper,
+.city-container .cascade-wrapper {
+  padding-bottom: 30px;
 }
 .city-container .city-wrapper .initial,
 .city-container .cascade-wrapper .initial {
@@ -1894,7 +2002,7 @@ a:focus {
 .city-container .city-wrapper .city-list .list-item,
 .city-container .cascade-wrapper .city-list .list-item {
   position: relative;
-  padding: 6px 0;
+  padding: 10px 0;
   font-size: 14px;
 }
 .city-container .city-wrapper .city-list .list-item:after,
@@ -1918,25 +2026,49 @@ a:focus {
 .city-container .cascade-wrapper {
   display: none;
 }
-.city-container .alpha-list {
-  position: absolute;
-  top: 50px;
-  right: 10px;
-  color: #070707;
-  font-size: 12px;
+@media screen and (max-width: 320px) {
+  .city-container .alpha-list {
+    position: fixed;
+    top: 80px;
+    right: 10px;
+    color: #070707;
+    font-size: 12px;
+  }
+  .city-container .alpha-list li {
+    margin: 0px 0;
+  }
+  .city-container .alpha-list a.active {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #f16046;
+    color: #ffffff;
+    text-align: center;
+    line-height: 14px;
+  }
 }
-.city-container .alpha-list li {
-  margin: 5px 0;
-}
-.city-container .alpha-list a.active {
-  display: block;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: #f16046;
-  color: #ffffff;
-  text-align: center;
-  line-height: 14px;
+@media screen and (min-width: 321px) {
+  .city-container .alpha-list {
+    position: fixed;
+    top: 100px;
+    right: 10px;
+    color: #070707;
+    font-size: 12px;
+  }
+  .city-container .alpha-list li {
+    margin: 0px 0;
+  }
+  .city-container .alpha-list a.active {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #f16046;
+    color: #ffffff;
+    text-align: center;
+    line-height: 14px;
+  }
 }
 /*选择车辆*/
 .dropDown {
@@ -1973,4 +2105,47 @@ a:focus {
   border-top: 1px solid #f1f1f1;
   content: ' ';
   width: 100%;
+}
+.city-confirm {
+  margin-top: 30px;
+  width: 80%;
+  height: 45px;
+  line-height: 45px;
+  background: #f8675c;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 5px;
+  margin: auto;
+}
+/*微信登录*/
+.wx-container {
+  padding-top: 40%;
+}
+.wx-container .wx-list {
+  width: 80%;
+  margin: auto;
+}
+.wx-container .wx-list li {
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  padding: 10px;
+}
+.wx-container .wx-list li:first-child {
+  background-color: #1dc4f1;
+}
+.wx-container .wx-list li:last-child {
+  background-color: #f5595a;
+}
+.wx-container .wx-list li .img {
+  display: inline-block;
+  vertical-align: middle;
+}
+.wx-container .wx-list li .right {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  margin-left: 30px;
+  color: #FFF;
 }

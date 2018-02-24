@@ -35,7 +35,7 @@
 								{{if infor.avatar == ""}}
 								<img src="../../assets/i/avatar.png" alt="" width="42" height="42" /> {{else}}
 								<img src="{{infor[0].avatar}}" alt="" width="42" height="42" /> {{/if}}
-								<input type="file" name='temp_file' value="" class="file" />
+								<!--<input type="file" name='temp_file' value="" class="file" />-->
 								<i class="arrow-right"></i>
 							</div>
 						</a>
@@ -44,7 +44,7 @@
 						<a href="javascript:;" class="item-href clearfix">
 							<span class="item-left">姓名</span>
 							<div class="item-right am-fr">
-								<input type="text" value="{{infor[0].name}}" id="name" readonly="readonly"/>
+								<input type="text" value="{{infor[0].name}}" id="name" readonly="readonly" />
 							</div>
 						</a>
 					</li>
@@ -60,7 +60,20 @@
 				</script>
 			</ul>
 		</div>
-		
+		<!--拨打电话-->
+		<div class="am-modal am-modal-alert" tabindex="-1" id="my-phone">
+			<div class="am-modal-dialog customer-service">
+				<script type="text/html" id="content">
+					<div class="am-modal-hd title">请联系管理员修改信息</div>
+					<div class="am-modal-bd tel">
+					</div>
+					<!--<div class="am-modal-footer">
+						<span class="am-modal-btn del">取消</span>
+						<span class="am-modal-btn del">确定</span>
+					</div>-->
+				</script>
+			</div>
+		</div>
 	</body>
 	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
@@ -90,6 +103,9 @@
 					} else if(data.success) {
 						var content = template('content', data);
 						$('.pi-list').html(content);
+						$(document).on('click', '.pi-list li', function() {
+							mask('请联系管理员修改信息');
+						});
 						$('.am-chooseBtn').on('click', function() {
 							$('#my-actions').modal('close');
 							var sex = $(this).text();

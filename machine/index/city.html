@@ -28,19 +28,19 @@
 		<div class="city-container">
 			<div class="city-search">
 				<div class="search-con am-cf">
-					<input type="text" placeholder="" class="ser-txt" />
-					<span class="word">输入位置信息</span>
-					<span class="cancel am-fr">查找</span>
+					<input type="text" placeholder="输入位置信息" class="ser-txt" />
+					<span class="word"></span>
+					<span class="cancel am-fr" id="search">查找</span>
 				</div>
 			</div>
 			<div class="cur-position">
-				您当前的位置是：<span class="position">山东省济南市高新区</span>
+				<span class="cposition">选择您所在的位置：</span><span class="position"></span>
 			</div>
-			<div class="city-wrapper">
+			<div class="city-wrapper" id="click-wrapper">
 				<div class="wrapper-item" id="province">
 					<script type="text/html" id="content">
 						{{each infor as item index}}
-						<div class="initial">{{item.charindex}}</div>
+						<div class="index-{{item.charindex}} initial">{{item.charindex}}</div>
 						<ul class="city-list" id="proviceList">
 							{{each item.name.split(",") as i index}}
 							<li class="list-item">{{i}}</li>
@@ -49,25 +49,41 @@
 						{{/each}}
 					</script>
 				</div>
-				<div class="wrapper-item" id = "city">
+				<div class="wrapper-item" id="city">
 					<script type="text/html" id="content1">
 						<ul class="city-list" id="cityList">
 							{{each infor as item index}}
-							<li class="list-item">{{infor.city}}</li>
+							<li class="list-item">{{item.city}}</li>
 							{{/each}}
 						</ul>
 					</script>
 				</div>
-				<div class="wrapper-item" id = "area">
+				<div class="wrapper-item" id="area">
 					<script type="text/html" id="content2">
 						<ul class="city-list" id="areaList">
 							{{each infor as item index}}
-							<li class="list-item">{{infor.area}}</li>
+							<li class="list-item">{{item.area}}</li>
 							{{/each}}
 						</ul>
 					</script>
 				</div>
 			</div>
+			<div class="city-wrapper" id="search-wrapper">
+				<div class="wrapper-item" id="serachCity">
+					<script type="text/html" id="content3">
+						<ul class="city-list" id="cityList">
+							{{if infor.length != 0}} {{each infor as item index}} {{if item.area == undefined}}
+							<li class="list-item">{{item.city}}</li>
+							{{else if item.area != undefined}}
+							<li class="list-item">{{item.area}}</li>
+							{{/if}} {{/each}} {{else if infor.length == 0}}
+							<li class="list-item">暂无此搜索条件</li>
+							{{/if}}
+						</ul>
+					</script>
+				</div>
+			</div>
+
 			<!--级联效果样式-->
 			<!--<div class="cascade-wrapper">
 				<ul class="city-list">
@@ -80,6 +96,7 @@
 			</div>-->
 			<!-- 首字母列表 -->
 			<ul class="alpha-list">
+
 				<li>
 					<a data='A' href=" javascript:;">A</a>
 				</li>
@@ -159,7 +176,9 @@
 					<a data='Z' href=" javascript:;">Z</a>
 				</li>
 			</ul>
+			<div class="city-confirm">确定</div>
 		</div>
+
 	</body>
 	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
@@ -170,24 +189,61 @@
 			$('.ser-txt').focus(function() {
 				$('.word').hide();
 			});
+
+			var keyword = "";
+			var cityArr = [];
 			//获取所有省份
-			getPosition("");
+			getPosition();
 			//获取所有城市
-			$('#province li').on('click',function(){
-				var keyword = $(this).text();
-				$(this).parent().next().show().siblings().hide();
-				getPosition(keyword);
+			$('#province li').on('click', function() {
+				cityArr = [];
+				keyword = $(this).text();
+				$(this).parents('#province').hide().next('#city').show();
+				getCity(keyword);
+				$('.cposition').html('你选择的位置是：');
+				$('#search-wrapper').hide();
+
 			});
+			//获取所有县区
+			$(document).on('click', '#city li', function() {
+				keyword = $(this).text();
+				$(this).parents('#city').hide().next('#area').show();
+				getCity(keyword);
+				$('#search-wrapper').hide();
+			});
+			$(document).on('click', '#area li', function() {
+				keyword = $(this).text();
+				getCity(keyword);
+			});
+
+			//点击查找
+			$('#search').on('click', function() {
+				cityArr = []
+				keyword = $('.ser-txt').val();
+				$('#click-wrapper').hide();
+				$('#search-wrapper').show();
+				getCity(keyword);
+			});
+			$(document).on('click', '#serachCity li', function() {
+				keyword = $(this).text();
+				getCity(keyword);
+				$('#search-wrapper').show();
+			});
+
+			//点击确定存储数据
+			$('.city-confirm').on('click', function() {
+				var txt = $('.position').html();
+				setInfo('city', txt);
+				window.location.href = preUrl('machine/index/index.html');
+			});
+
 			
-			function getPosition(keyWord) {
+
+			function getPosition() { //获取省份
 				$.ajax({
 					type: 'POST',
-					url: reqUrl("position"),
+					url: reqUrl("initposition"),
 					dataType: 'JSON',
-					data: {
-						keyword: "",
-						isinit: true
-					},
 					async: false,
 					xhrFields: {
 						withCredentials: true
@@ -195,12 +251,17 @@
 					success: function(data) {
 						if(data.success) {
 							var content = template('content', data);
-							var content1 = template('content', data);
-							var content2 = template('content', data);
 							$('#province').html(content);
-							$('#city').html(content1);
-							$('#area').html(content2);
-
+							$('.alpha-list').on('click', 'a', function() {
+									$(this).addClass('active').parent().siblings().children().removeClass('active');
+									var data = $(this).attr('data');
+									var group = $('.index-' + data);
+									var _top = group.offset().top;
+									console.log(_top);
+									$("body,html").animate({
+										scrollTop: (_top - 80)
+									}, 500);
+								});
 						} else {
 							mask(data.msg);
 						}
@@ -211,7 +272,42 @@
 				});
 			}
 
-		})
+			function getCity(keyWord) { //获取城市和地区
+				$.ajax({
+					type: 'POST',
+					url: reqUrl("position"),
+					dataType: 'JSON',
+					data: {
+						keyword: keyWord
+					},
+					async: false,
+					xhrFields: {
+						withCredentials: true
+					},
+					success: function(data) {
+						if(data.success) {
+							var arrLen = data.infor.length;
+							if(arrLen != 0) {
+								cityArr.push(keyword);
+								var Position = cityArr.join('&gt;');
+								$('.position').addClass('active').html(Position);
+							}
+							var content1 = template('content1', data);
+							var content2 = template('content2', data);
+							var content3 = template('content3', data);
+							$('#city').html(content1);
+							$('#area').html(content2);
+							$('#serachCity').html(content3);
+						} else {
+							mask(data.msg);
+						}
+					},
+					error: function(e, request, settings) {
+						alert(settings);
+					}
+				});
+			};
+		});
 	</script>
 
 </html>

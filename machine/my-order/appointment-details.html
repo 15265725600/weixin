@@ -21,7 +21,7 @@
 			</div>
 			<h1 class="am-header-title">
 		        <a href="javascript:;" class="title">
-		          预约详情
+		          订单详情
 		        </a>
 		    </h1>
 		</header>
@@ -32,8 +32,9 @@
 					<div class="item-top am-cf">
 						<span class="ordernum am-fl">订单号：{{infor.ordernum}}</span> {{if infor.status == 2 || infor.status == 1}}
 						<span class="status am-fr">待接单</span> {{else if infor.status == 5}}
-						<span class="status am-fr">已完成</span> {{else if infor.status == '40' || infor.status == '41'}}
-						<span class="status am-fr">待完成</span>{{/if}}
+						<span class="status am-fr">已完成</span> {{else if infor.status == '40' || infor.status == '41' || infor.status == 4}}
+						<span class="status am-fr">待完成</span>{{else if item.status == 8}}
+						<span class="status am-fr">已删除</span>{{/if}}
 					</div>
 					<div class="item-task">
 						<div class="title">作业描述</div>

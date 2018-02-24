@@ -1,203 +1,256 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="description" content="">
-		<meta name="keywords" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<title>微信订单管理</title>
-		<link rel="stylesheet" href="../../assets/css/amazeui.css">
-		<link rel="stylesheet" href="../../assets/css/style.css">
-	</head>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>微信订单管理</title>
+    <link rel="stylesheet" href="../../assets/css/amazeui.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=8cf1a81ed325757401fa24e4822e2c25&plugin=AMap.CitySearch"></script>
+  </head>
 
-	<body>
-		<header data-am-widget="header" class="am-header header am-header-fixed">
-			<div class="index-header">
-				<span class="icon-gps"></span>
-				<a href="city.html" class="wf-position">中国 - 山东省济南市高新区</a>
-			</div>
-		</header>
-		<div class="wf-container">
-			<div class="wf-appointment">
-				<div class="wf-title am-cf">
-					<div class="title-left am-fl">
-						<span class="left-word">我的预约</span>
-					</div>
-					<div class="title-right am-fr">
-						<span class="icon-point"></span>
-						<a href="my-appointment.html" class="more">更多</a>
-					</div>
-				</div>
-				<div class="wrapper">
-					<div class="wrapper-content">
+  <body>
+    <header data-am-widget="header" class="am-header header am-header-fixed">
+      <div class="index-header">
+        <span class="icon-gps"></span>
+        <a href="city.html" class="wf-position" id="city"></a>
+      </div>
+    </header>
+    <div class="wf-container">
+      <div class="wf-appointment">
+        <div class="wf-title am-cf">
+          <div class="title-left am-fl">
+            <span class="left-word">我的预约</span>
+          </div>
+          <div class="title-right am-fr">
+            <span class="icon-point"></span>
+            <a href="my-appointment.html" class="more">更多</a>
+          </div>
+        </div>
+        <div class="wrapper">
+          <div class="wrapper-content">
 
-						<ul class="wrapper-list">
-							<script type="text/html" id="template">
-								{{if total == 0}}
-								<!--无预约-->
-								<div class="wrapper-img">
-									<img src="../../assets/i/n-appoint.png" class="am-center" width="100" height="100" />
-									<div class="wrapper-target">
-										<span>无预约订单</span>
-										<a href="javascript:;" class="go-to">去预约</a>
-									</div>
-								</div>
-								{{else}} {{each list as item index}}
-								<!--有预约-->
-								<li class="list-item">
-									<a href="appointment-details.html?id={{item.id}}" class="item-href">
-										<div class="item-top am-cf">
-											<span class="time am-fl">{{item.ordertime}}</span> {{if item.status == 2 || item.status == 1}}
-											<span class="status am-fr">待接单</span> {{else if item.status == 3}}
-											<span class="status am-fr">待确认</span> {{else if item.status == 4}}
-											<span class="status am-fr">待评价</span> {{else if item.status == 5}}
-											<span class="status am-fr">已完成</span> {{else if item.status == '40' || item.status == '41'}}
-											<span class="status am-fr">待完成</span> {{/if}}
-										</div>
-										<div class="item-task">
-											<div class="title">作业描述</div>
-											<div class="desc">{{item.demo}}</div>
-										</div>
-										<div class="bottom">
-											{{if item.type == 1}}
-											<span class="keyWord">播种</span> {{else if item.type == 2}}
-											<span class="keyWord">深耕</span> {{else if item.type == 3}}
-											<span class="keyWord">收货</span> {{/if}}
-											<span class="address">{{item.province}}{{item.city}}{{item.area}}</span>
-										</div>
-									</a>
-								</li>
-								{{/each}} {{/if}}
-							</script>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="wf-information">
-				<div class="wf-title am-cf">
-					<div class="title-left am-fl">
-						<span class="left-word">消息通知</span>
-					</div>
-					<div class="title-right am-fr">
-						<span class="icon-infor"></span>
-						<a href="information.html" class="more">更多</a>
-					</div>
-				</div>
-				<ul class="infor-wrapper">
-					<script type="text/html" id="content">
-						{{each listItems as item index}}
-						<li class="list-item">
-							<a href="javascript:;" class="item-href">
-								<div class="item-top">
-									<span class="time">{{item.regdate}}</span>
-								</div>
-								<div class="item-bottom">
-									<div class="infor">
-										<span class="icon-infor"></span>
-										<span class="name">订单消息</span>
-									</div>
-									<div class="desc">{{item.content}}</div>
-								</div>
-							</a>
-						</li>
-						{{/each}}
-					</script>
-				</ul>
-			</div>
-		</div>
-		<footer class="am-cf">
-			<div data-am-widget="navbar" class="am-navbar am-cf" id="">
-				<ul class="am-navbar-nav am-cf am-avg-sm-4 foot-wrapper">
-					<li class="foot_item">
-						<a href="index.html">
-							<i class="home active"></i>
-							<span class="active">首页</span>
-						</a>
-					</li>
-					<li class="foot_item">
-						<a href="../my-appointment/my-appointment.html" class="">
-							<i class="appointment"></i>
-							<span class="">我要预约</span>
-						</a>
-					</li>
-					<li class="foot_item">
-						<a href="../my/my.html" class="">
-							<i class="my"></i>
-							<span class="">我</span>
-						</a>
-					</li>
-				</ul>
-			</div>
-		</footer>
-	</body>
-	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
-	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
-	<script type="text/javascript" src="../../assets/js/common.js"></script>
-	<script type="text/javascript" src="../../assets/js/template.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			var token = getCookie('token');
-			//订单列表
-			$.ajax({
-				type: 'POST',
-				url: reqUrl("order_list"),
-				data: {
-					token: token,
-					status: '',
-					limit: 3,
-					page: ''
-				},
-				dataType: 'JSON',
-				async: false,
-				xhrFields: {
-					withCredentials: true
-				},
-				success: function(data) {
-					if(data.error_code == 200) {
-						window.location.href = preUrl('farmer/log/login.html?path=farmer/index/index.html');
-					} else if(data.success) {
-						var content = template('template', data.infor);
-						$('.wrapper-list').html(content);
-					} else {
-						mask(data.msg);
-					}
-				},
-				error: function(e, request, settings) {
-					alert(settings);
-				}
-			});
-			//消息列表
-			$.ajax({
-				type: 'POST',
-				url: reqUrl("notice_list"),
-				data: {
-					token: token,
-					limit: 3,
-					page: 0
-				},
-				dataType: 'JSON',
-				async: false,
-				xhrFields: {
-					withCredentials: true
-				},
-				success: function(data) {
-					if(data.error_code == 200) {
-						window.location.href = preUrl('farmer/log/login.html?path=farmer/index/index.html');
-					} else if(data.success) {
-						var content = template('content', data.infor);
-						$('.infor-wrapper').html(content);
-					} else {
-						mask(data.msg);
-					}
-				},
-				error: function(e, request, settings) {
-					alert(settings);
-				}
-			});
+            <ul class="wrapper-list">
+              <script type="text/html" id="template">
+                {{if total == 0}}
+                <!--无预约-->
+                <div class="wrapper-img">
+                  <img src="../../assets/i/n-appoint.png" class="am-center" width="100" height="100" />
+                  <div class="wrapper-target">
+                    <span>无预约订单</span>
+                    <a href="../my-appointment/my-appointment.html" class="go-to">去预约</a>
+                  </div>
+                </div>
+                {{else}} {{each list as item index}}
+                <!--有预约-->
+                <li class="list-item">
+                  <a href="appointment-details.html?id={{item.id}}&type={{getJquery}}" class="item-href">
+                    <div class="item-top am-cf">
+                      <span class="time am-fl">{{item.ordertime}}</span> {{if item.status == 2 || item.status == 1}}
+                      <span class="status am-fr">待接单</span> {{else if item.status == 3}}
+                      <span class="status am-fr">待确认</span> {{else if item.status == 4}}
+                      <span class="status am-fr">待评价</span> {{else if item.status == 5}}
+                      <span class="status am-fr">已完成</span> {{else if item.status == '40' || item.status == '41'}}
+                      <span class="status am-fr">待完成</span> {{/if}}
+                    </div>
+                    <div class="item-task">
+                      <div class="title">作业描述</div>
+                      <div class="desc">{{item.demo}}</div>
+                    </div>
+                    <div class="bottom">
+                      <span class="keyWord">{{item.type_text}}</span>
+                      <span class="address">{{item.province}}{{item.city}}{{item.area}}</span>
+                    </div>
+                  </a>
+                </li>
+                {{/each}} {{/if}}
+              </script>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="wf-information">
+        <div class="wf-title am-cf">
+          <div class="title-left am-fl">
+            <span class="left-word">消息通知</span>
+          </div>
+          <div class="title-right am-fr">
+            <span class="icon-infor"></span>
+            <a href="information.html" class="more">更多</a>
+            <i class="red-dot"></i>
+          </div>
+        </div>
+        <ul class="infor-wrapper">
+          <script type="text/html" id="content">
+            {{if totalCount != 0}} {{each listItems as item index}}
+            <li class="list-item">
+              <a href="javascript:;" class="item-href">
+                <div class="item-top">
+                  <span class="time">{{item.regdate}}</span>
+                </div>
+                <div class="item-bottom">
+                  <div class="infor">
+                    <span class="icon-infor"></span>
+                    <span class="name">订单消息</span>
+                  </div>
+                  <div class="desc">{{item.content}}</div>
+                </div>
+              </a>
+            </li>
+            {{/each}} {{else}}
+            <!--无消息-->
+            <div class="wrapper-img">
+              <img src="../../assets/i/n-appoint.png" class="am-center" width="100" height="100" />
+              <div class="wrapper-target">
+                <span>暂无消息</span>
+              </div>
+            </div>
+            {{/if}}
+          </script>
+        </ul>
+      </div>
+    </div>
+    <footer class="am-cf">
+      <div data-am-widget="navbar" class="am-navbar am-cf" id="">
+        <ul class="am-navbar-nav am-cf am-avg-sm-4 foot-wrapper">
+          <li class="foot_item">
+            <a href="index.html">
+              <i class="home active"></i>
+              <span class="active">首页</span>
+            </a>
+          </li>
+          <li class="foot_item">
+            <a href="../my-appointment/my-appointment.html" class="">
+              <i class="appointment"></i>
+              <span class="">我要预约</span>
+            </a>
+          </li>
+          <li class="foot_item">
+            <a href="../my/my.html" class="">
+              <i class="my"></i>
+              <span class="">我</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+  <script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
+  <script type="text/javascript" src="../../assets/js/amazeui.js"></script>
+  <script type="text/javascript" src="../../assets/js/common.js"></script>
+  <script type="text/javascript" src="../../assets/js/template.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      var token = "";
+      var Token = GetQueryString('token');
+      if(Token) {
+        token = Token;
+      } else {
+        token = getCookie('token');
+      }
 
-		});
-	</script>
+      var city = getInfo('city');
+      if(city == null) {
+        showCityInfo();
+      } else {
+        $('#city').html(city);
+      }
+      //获取用户所在城市信息
+      function showCityInfo() {
+        //实例化城市查询类
+        var citysearch = new AMap.CitySearch();
+        //自动获取用户IP，返回当前城市
+        citysearch.getLocalCity(function(status, result) {
+          if(status === 'complete' && result.info === 'OK') {
+            if(result && result.city && result.bounds) {
+              var cityinfo = result.city;
+              //							setInfo('city', cityinfo);
+              document.getElementById('city').innerHTML = cityinfo;
+
+            }
+          } else {
+            document.getElementById('city').innerHTML = result.info;
+          }
+        });
+      }
+      //订单列表
+      $.ajax({
+        type: 'POST',
+        url: reqUrl("order_list"),
+        data: {
+          token: token,
+          status: '',
+          limit: 3,
+          page: ''
+        },
+        dataType: 'JSON',
+        async: false,
+        xhrFields: {
+          withCredentials: true
+        },
+        success: function(data) {
+          if(data.error_code == 200) {
+            window.location.href = preUrl('farmer/log/login.html?path=farmer/index/index.html');
+          } else if(data.success) {
+            template.helper('getJquery', function() {
+              return 3;
+            });
+            var content = template('template', data.infor);
+
+            $('.wrapper-list').html(content);
+
+          } else {
+            mask(data.msg);
+          }
+        },
+        error: function(e, request, settings) {
+          alert(settings);
+        }
+      });
+      //消息列表
+      $.ajax({
+        type: 'POST',
+        url: reqUrl("notice_list"),
+        data: {
+          token: token,
+          limit: 3,
+          page: 0
+        },
+        dataType: 'JSON',
+        async: false,
+        xhrFields: {
+          withCredentials: true
+        },
+        success: function(data) {
+          if(data.error_code == 200) {
+            window.location.href = preUrl('farmer/log/login.html?path=farmer/index/index.html');
+          } else if(data.success) {
+            var content = template('content', data.infor);
+            $('.infor-wrapper').html(content);
+            var count = data.infor.totalCount;
+            if(count != 0) {
+              var list = data.infor.listItems;
+              for(var i = 0; i < list.length; i++) {
+                if(list[i].looktype == 1) {
+                  $('.red-dot').show();
+                }
+              }
+            }
+
+          } else {
+            mask(data.msg);
+          }
+        },
+        error: function(e, request, settings) {
+          alert(settings);
+        }
+      });
+
+    });
+  </script>
 
 </html>

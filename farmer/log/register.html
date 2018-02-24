@@ -15,7 +15,7 @@
 	<body class="height">
 		<header data-am-widget="header" class="am-header am-header-fixed header">
 			<div class="am-header-left am-header-nav">
-				<a href="login.html" class="hleft">
+				<a href="javascript:history.back()" class="hleft">
 					取消
 				</a>
 			</div>
@@ -136,7 +136,7 @@
 			$('.del-num').on('click',function(){
 				$('.txt').val("");
 			});
-			$('.submit').on('click',function(){
+			$('.submit').click(function(){
 				var code = $('.code').html();
 				var tel = $('.txt').val();
 				if(tel == ""){

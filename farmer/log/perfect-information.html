@@ -36,8 +36,8 @@
 					<a href="javascript:;" class="item-href clearfix">
 						<span class="item-left">头像</span>
 						<div class="item-right am-fr" id="top-pdc">
-							<img src="../../assets/i/avatar.png" alt="" width="42" height="42" />
-							<input type="file" name='temp_file' value="" class="file" />
+							<img src="../../assets/i/default_avatar.png" alt="" width="42" height="42" />
+							<input type="file" name='temp_file' value="" class="file" accept="image/*"/>
 							<i class="arrow-right"></i>
 						</div>
 					</a>
@@ -89,14 +89,14 @@
 	</body>
 	<script type="text/javascript" src="../../assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/amazeui.js"></script>
+	<script type="text/javascript" src="../../assets/js/common.js"></script>
 	<script type="text/javascript" src="../../assets/js/picker.min.js"></script>
 	<script type="text/javascript" src="../../assets/js/exif.min.js"></script>
-	<script type="text/javascript" src="../../assets/js/common.js"></script>
 	<script type="text/javascript" src="../../assets/js/template.js"></script>
 	<script>
 		var token = GetQueryString('token');
 		//选择性别
-		$('.am-chooseBtn').on('click', function() {
+		$('.am-chooseBtn').click(function() {
 			$('#my-actions').modal('close');
 			var sex = $(this).text();
 			$('#sex').val(sex);
@@ -336,6 +336,9 @@
 				success: function(data) {
 					if(data.success) {
 						mask('您的信息已提交，审核通过后将短信通知您');
+						setTimeout(function(){
+								window.location.href = preUrl('farmer/log/login.html');
+						},2000);
 					} else {
 						mask(data.msg)
 					}
